@@ -1,0 +1,7 @@
+# GitHub Pages (Jekyll): file da NON pubblicare sul sito
+exclude:
+  - LEGGIMI.md
+  - SOCIAL.md
+  - google-apps-script
+  - _strumenti
+  - _pagine
