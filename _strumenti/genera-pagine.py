@@ -16,7 +16,8 @@ for src in sorted((R / "_pagine").glob("*.html")):
     h = re.sub(r'(<meta property="og:title" content=")[^"]*', lambda x: x.group(1) + m["TITLE"], h)
     h = h.replace('href="' + BASE + '"', 'href="' + BASE + src.name + '"').replace('content="' + BASE + '"', 'content="' + BASE + src.name + '"')
     if "NOINDEX" in meta: h = h.replace("</head>", '<meta name="robots" content="noindex">\n</head>')
-    hd = header.replace('href="#dove"', 'href="./#dove"').replace('href="#lezioni"', 'href="./#lezioni"')
+    # le ancore del menu puntano alle sezioni della home (tranne il link "Vai al contenuto")
+    hd = re.sub(r'href="#(?!contenuto")([\w-]+)"', lambda x: 'href="./#' + x.group(1) + '"', header)
     hd = hd.replace('<a href="' + src.name + '">', '<a href="' + src.name + '" aria-current="page">')
     out = h + hd + '<main id="contenuto">\n' + body.strip() + "\n" + footer + '<script src="js/config.js"></script>\n<script src="js/main.js"></script>\n</body>\n</html>\n'
     (R / src.name).write_text(out, encoding="utf-8")
