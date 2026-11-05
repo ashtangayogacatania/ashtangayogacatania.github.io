@@ -12,6 +12,7 @@
   function isoDate(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
   function parseDate(s) { var p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
   function longDate(s) { var d = parseDate(s); return GIORNI[d.getDay()] + " " + d.getDate() + " " + MESI[d.getMonth()]; }
+  function lunedi(iso) { var d = parseDate(iso); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return isoDate(d); }
   function addMin(hhmm, min) { var p = hhmm.split(":"); var t = +p[0] * 60 + +p[1] + (+min || 0); return pad(Math.floor(t / 60) % 24) + ":" + pad(t % 60); }
 
   /* ---------- Contatti, link WhatsApp e social ---------- */
@@ -73,15 +74,27 @@
       box.innerHTML = '<p class="loading">Al momento non ci sono lezioni in calendario. Scrivici su WhatsApp per informazioni o per una lezione individuale.</p>';
       return;
     }
-    var html = "", lastDay = "";
+    var html = "", lastWeek = "";
+    var oggi = isoDate(new Date()), d1 = new Date(); d1.setDate(d1.getDate() + 1);
+    var domani = isoDate(d1);
+    var lunediOggi = lunedi(oggi);
     lezioni.forEach(function (l, i) {
-      if (l.data !== lastDay) { html += '<div class="day-label">' + esc(longDate(l.data)) + "</div>"; lastDay = l.data; }
+      // separatore per settimana: "Questa settimana", "Settimana prossima", "Dal 23 novembre"
+      var w = lunedi(l.data);
+      if (w !== lastWeek) {
+        var diff = Math.round((parseDate(w) - parseDate(lunediOggi)) / 864e5 / 7);
+        var lab = diff <= 0 ? "Questa settimana" : diff === 1 ? "Settimana prossima" : "Dal " + parseDate(w).getDate() + " " + MESI[parseDate(w).getMonth()];
+        html += '<div class="day-label">' + esc(lab) + "</div>"; lastWeek = w;
+      }
+      var dt = parseDate(l.data);
+      var rel = l.data === oggi ? "Oggi" : l.data === domani ? "Domani" : "";
       var liberi = (l.prenotati == null || !l.posti) ? null : Math.max(0, l.posti - l.prenotati);
       var full = liberi === 0;
       var seats = liberi == null ? "" : full ? '<span class="seats full">Completo</span>' : liberi <= 5 ? '<span class="seats">' + liberi + (liberi === 1 ? " posto" : " posti") + "</span>" : "";
       html += '<div class="session' + (full ? " is-full" : "") + '">' +
-        '<time datetime="' + esc(l.data + "T" + l.ora) + '">' + esc(l.ora) + "<small>fino alle " + esc(addMin(l.ora, l.durata)) + "</small></time>" +
-        "<div><h3>" + esc(l.titolo) + seats + '</h3><div class="meta">' + esc([l.livello, l.sede].filter(Boolean).join(" · ")) + "</div></div>" +
+        '<div class="date-tile' + (rel ? " soon" : "") + '" aria-hidden="true"><span>' + GIORNI[dt.getDay()].slice(0, 3) + "</span><b>" + dt.getDate() + "</b><span>" + MESI[dt.getMonth()].slice(0, 3) + "</span></div>" +
+        '<div class="s-body"><div class="s-when"><time datetime="' + esc(l.data + "T" + l.ora) + '"><span class="sr">' + esc(longDate(l.data)) + ", </span>" + esc(l.ora) + "–" + esc(addMin(l.ora, l.durata)) + "</time>" + (rel ? '<span class="rel">' + rel + "</span>" : "") + "</div>" +
+        "<h3>" + esc(l.titolo) + seats + '</h3><div class="meta">' + esc([l.livello, l.sede].filter(Boolean).join(" · ")) + "</div></div>" +
         (full
           ? '<a class="btn btn-ghost btn-sm" data-wa-full="' + i + '">Lista d\'attesa</a>'
           : '<button class="btn btn-primary btn-sm" type="button" data-book="' + i + '">Prenota</button>') +

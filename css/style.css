@@ -240,3 +240,23 @@ h1,h2,h3,.session time,.hero-badge b,.eight li::before{font-variant-numeric:lini
 @media (max-width:860px){.split.lessons>div:first-child .stack{display:none}.split.lessons .stack-mobile{display:grid}}
 .stack-mobile{display:none}
 .min-note{font-size:.86rem;line-height:1.55;color:var(--ink);background:var(--accent-soft);border-radius:10px;padding:12px 14px;margin:-6px 0 18px}
+
+/* Calendario: riquadro-data su ogni lezione */
+#calendario-lezioni .session{grid-template-columns:auto 1fr auto;gap:18px;padding:14px 18px 14px 14px}
+.date-tile{width:64px;text-align:center;border-radius:10px;background:var(--accent-soft);color:var(--accent);padding:8px 0 7px;line-height:1}
+.date-tile span{display:block;font:600 .68rem/1 var(--sans);letter-spacing:.12em;text-transform:uppercase}
+.date-tile b{display:block;font:500 2.1rem/1.05 var(--serif);font-variant-numeric:lining-nums;color:var(--ink);margin:3px 0 2px}
+.date-tile.soon{background:var(--accent);color:#fff}
+.date-tile.soon b{color:#fff}
+.s-when{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.s-when time{font:600 .95rem/1.2 var(--sans);font-variant-numeric:tabular-nums}
+.rel{font:600 .68rem/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 7px;border-radius:999px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+#calendario-lezioni .day-label{margin:26px 0 2px}
+#calendario-lezioni .day-label:first-child{margin-top:0}
+@media (max-width:640px){
+  #calendario-lezioni .session{grid-template-columns:auto 1fr;gap:10px 14px;padding:14px}
+  #calendario-lezioni .session .btn{grid-column:1 / -1}
+  .date-tile{width:58px}
+  .date-tile b{font-size:1.9rem}
+}
