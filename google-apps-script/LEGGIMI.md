@@ -34,6 +34,14 @@ Le email di conferma partiranno da quell'indirizzo Gmail.
 
 Se cambiate gli orari del riepilogo, aggiornate anche il testo mostrato sul sito (`js/main.js`, funzione `scadenzaAvviso`).
 
+## 4c. Pagina riservata delle prenotazioni (sola lettura)
+Indirizzo: **https://ashtangayogacatania.github.io/gestione.html** (non è collegata da nessuna parte del sito e non compare su Google).
+1. Nella scheda **Impostazioni**, alla riga `PASSWORD_GESTIONE`, scrivete una password di almeno 10 caratteri, con lettere e numeri.
+2. Aprite la pagina e inserite la password. Rimane valida finché non chiudete la scheda del browser.
+3. La pagina mostra le prossime lezioni e gli ultimi 7 giorni, con i prenotati, i contatti (WhatsApp, telefono ed email) e lo stato rispetto al minimo. Si aggiorna da sola ogni minuto.
+4. Da lì **non si può modificare nulla**. Per annullare o cambiare una prenotazione si usa il foglio.
+5. Per cambiare la password basta modificarla nel foglio. Dopo 10 tentativi sbagliati la pagina si blocca per 15 minuti.
+
 ## 5. Collega il sito
 Apri `js/config.js` e incolla l'URL:
 ```js
