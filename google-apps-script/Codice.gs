@@ -54,7 +54,8 @@ function setup() {
   // Menu di validazione per la colonna Stato
   var p = ss.getSheetByName(FOGLI.PRENOTAZIONI);
   p.getRange("I2:I").setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(["Confermata", "Annullata", "Presente"]).build());
-  SpreadsheetApp.getUi().alert("Fogli creati! Ora segui il punto 4 del LEGGIMI: Distribuisci → Nuovo deployment → App web.");
+  try { SpreadsheetApp.getUi().alert("Fogli creati! Ora segui il punto 4 del LEGGIMI: Distribuisci → Nuovo deployment → App web."); }
+  catch (e) { console.log("Fogli creati! Ora segui il punto 4 del LEGGIMI."); } // dall'editor non si può mostrare l'avviso
 }
 
 function crea_(ss, nome, intestazioni, righe, colonneTesto) {

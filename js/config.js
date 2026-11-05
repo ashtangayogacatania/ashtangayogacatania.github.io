@@ -13,7 +13,7 @@ window.YOGA_CONFIG = {
 
   // URL della Web App di Google Apps Script (vedi cartella google-apps-script/LEGGIMI.md).
   // Finché è vuoto, il sito mostra l'orario qui sotto e le prenotazioni passano da WhatsApp.
-  apiUrl: "",
+  apiUrl: "https://script.google.com/macros/s/AKfycbwEwE68fnzhHsf_4HCQn6X1bRfRR1C6Og1bq0BJD36NgQwm4WtasKkj1W3lpihlkAPZ_g/exec",
 
   // Quante settimane di lezioni mostrare nel calendario
   settimaneVisibili: 3,
