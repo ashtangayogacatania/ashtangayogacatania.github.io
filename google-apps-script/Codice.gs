@@ -30,7 +30,8 @@ var IMPOSTAZIONI_DEFAULT = [
   ["MIN_PARTECIPANTI", 5, "Numero minimo di partecipanti perché la lezione si svolga (0 = nessun minimo)"],
   ["RIEPILOGO_ORA_STESSO_GIORNO", "14:00", "Ora del riepilogo per le lezioni dal pomeriggio in poi (stesso giorno)"],
   ["RIEPILOGO_ORA_GIORNO_PRIMA", "20:00", "Ora del riepilogo per le lezioni del mattino (giorno prima)"],
-  ["LEZIONI_MATTINO_FINO_ALLE", "13:00", "Le lezioni che iniziano prima di quest'ora contano come lezioni del mattino"]
+  ["LEZIONI_MATTINO_FINO_ALLE", "13:00", "Le lezioni che iniziano prima di quest'ora contano come lezioni del mattino"],
+  ["PASSWORD_GESTIONE", "", "Password della pagina riservata gestione.html (almeno 10 caratteri; vuota = pagina disattivata)"]
 ];
 
 /* ============ 1) DA ESEGUIRE UNA SOLA VOLTA: crea i fogli ============ */
@@ -92,6 +93,7 @@ function doPost(e) {
   var lock = LockService.getScriptLock();
   try {
     var d = JSON.parse(e.postData.contents || "{}");
+    if (d.action === "gestione") return json_(gestione_(d));
     if (d.action !== "prenota") return json_({ ok: false, error: "Azione non valida" });
     if (d.hp) return json_({ ok: true }); // trappola anti-spam: i bot compilano il campo nascosto
 
@@ -310,6 +312,63 @@ function provaRiepilogo() {
   lezioniRiepilogo_().forEach(function (l) {
     console.log(l.id + " → riepilogo il " + Utilities.formatDate(momentoRiepilogo_(l, imp), TZ, "dd/MM 'alle' HH:mm") + " (prenotati " + l.prenotati + ")");
   });
+}
+
+/* ============ Pagina riservata (gestione.html): sola lettura, protetta da password ============ */
+function gestione_(d) {
+  var imp = impostazioni_();
+  var pwd = String(imp.PASSWORD_GESTIONE || "");
+  if (pwd.length < 10) return { ok: false, error: "Pagina non attiva: imposta PASSWORD_GESTIONE (almeno 10 caratteri) nella scheda Impostazioni del foglio." };
+
+  // Blocco anti-tentativi: dopo 10 password errate la pagina si blocca per 15 minuti
+  var cache = CacheService.getScriptCache();
+  var errori = +(cache.get("gestione_err") || 0);
+  if (errori >= 10) return { ok: false, error: "Troppi tentativi errati. Riprova tra 15 minuti." };
+  if (!uguali_(String(d.password || ""), pwd)) {
+    cache.put("gestione_err", String(errori + 1), 900);
+    Utilities.sleep(800);
+    return { ok: false, auth: false, error: "Password errata." };
+  }
+
+  var now = new Date();
+  var oggi = Utilities.formatDate(now, TZ, "yyyy-MM-dd");
+  var da = Utilities.formatDate(new Date(now.getTime() - 7 * 86400000), TZ, "yyyy-MM-dd");
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  var prenotazioni = righe_(ss.getSheetByName(FOGLI.PRENOTAZIONI)).map(function (r) {
+    return {
+      ricevuta: r[0] instanceof Date ? Utilities.formatDate(r[0], TZ, "dd/MM HH:mm") : String(r[0]),
+      data: isoDa_(r[1]), ora: ora_(r[2]), titolo: String(r[3] || ""),
+      nome: String(r[4] || ""), telefono: String(r[5] || "").replace(/^'/, ""),
+      email: String(r[6] || ""), note: String(r[7] || ""),
+      stato: String(r[8] || "").trim() || "Confermata"
+    };
+  }).filter(function (p) { return p.data && p.data >= da; });
+
+  var lezioni = lezioni_(true).map(function (l) {
+    return { id: l.id, data: l.data, ora: l.ora, durata: l.durata, titolo: l.titolo, sede: l.sede, posti: l.posti };
+  });
+  var annullate = righe_(ss.getSheetByName(FOGLI.ANNULLATE)).map(function (r) {
+    return { data: isoDa_(r[0]), ora: ora_(r[1]), motivo: String(r[2] || "") };
+  }).filter(function (a) { return a.data && a.data >= da; });
+
+  return {
+    ok: true,
+    aggiornato: Utilities.formatDate(now, TZ, "dd/MM/yyyy HH:mm"),
+    oggi: oggi,
+    minimo: +imp.MIN_PARTECIPANTI || 0,
+    lezioni: lezioni,
+    prenotazioni: prenotazioni,
+    annullate: annullate,
+    foglio: ss.getUrl()
+  };
+}
+
+function uguali_(a, b) { // confronto a tempo costante
+  if (a.length !== b.length) return false;
+  var x = 0;
+  for (var i = 0; i < a.length; i++) x |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return x === 0;
 }
 
 /* ============ Utilità ============ */
