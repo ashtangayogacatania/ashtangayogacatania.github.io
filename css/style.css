@@ -239,3 +239,4 @@ h1,h2,h3,.session time,.hero-badge b,.eight li::before{font-variant-numeric:lini
 @media (max-width:860px){.split.lessons{grid-template-columns:1fr}}
 @media (max-width:860px){.split.lessons>div:first-child .stack{display:none}.split.lessons .stack-mobile{display:grid}}
 .stack-mobile{display:none}
+.min-note{font-size:.86rem;line-height:1.55;color:var(--ink);background:var(--accent-soft);border-radius:10px;padding:12px 14px;margin:-6px 0 18px}

@@ -15,6 +15,10 @@ window.YOGA_CONFIG = {
   // Finché è vuoto, il sito mostra l'orario qui sotto e le prenotazioni passano da WhatsApp.
   apiUrl: "https://script.google.com/macros/s/AKfycbwEwE68fnzhHsf_4HCQn6X1bRfRR1C6Og1bq0BJD36NgQwm4WtasKkj1W3lpihlkAPZ_g/exec",
 
+  // Numero minimo di partecipanti perché la lezione si svolga (0 = nessun minimo).
+  // Deve corrispondere a MIN_PARTECIPANTI nella scheda Impostazioni del Google Sheet.
+  minimoPartecipanti: 5,
+
   // Quante settimane di lezioni mostrare nel calendario
   settimaneVisibili: 3,
 

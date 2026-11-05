@@ -259,6 +259,7 @@
       <span class="eyebrow">Prenotazione</span>
       <h2 id="dlg-title">Lezione</h2>
       <p class="when" id="dlg-when"></p>
+      <p class="min-note" id="dlg-min" hidden></p>
       <form id="prenota-form" novalidate>
         <div class="field"><label for="f-nome">Nome e cognome *</label><input id="f-nome" name="nome" autocomplete="name" required maxlength="80"></div>
         <div class="field"><label for="f-tel">Telefono / WhatsApp *</label><input id="f-tel" name="telefono" type="tel" autocomplete="tel" inputmode="tel" required maxlength="30"></div>
@@ -275,6 +276,7 @@
       <svg aria-hidden="true"><use href="img/icons.svg#check"/></svg>
       <h2>Prenotazione confermata</h2>
       <p class="muted" id="dlg-success-text"></p>
+      <p class="muted" id="dlg-success-min" style="font-size:.88rem"></p>
       <button class="btn btn-ghost" id="dlg-done" type="button">Chiudi</button>
     </div>
   </div>

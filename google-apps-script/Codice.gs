@@ -19,6 +19,20 @@ var FOGLI = {
 var GIORNI = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
 var TZ = "Europe/Rome";
 
+// Impostazioni predefinite (scheda "Impostazioni"). Le righe mancanti vengono aggiunte da installaRiepilogo().
+var IMPOSTAZIONI_DEFAULT = [
+  ["EMAIL_NOTIFICHE", "ashtangayogacatania@gmail.com", "Dove arrivano le nuove prenotazioni e i riepiloghi"],
+  ["NOME_STUDIO", "Ashtanga Yoga Catania", "Nome usato nelle email"],
+  ["WHATSAPP", "+39 351 669 2727", "Numero mostrato nelle email di conferma"],
+  ["INDIRIZZO", "Istituto Leonardo da Vinci, Via G.B. De La Salle 10/12, Catania (zona Canalicchio)", "Indirizzo nelle email"],
+  ["SETTIMANE_VISIBILI", 3, "Quante settimane mostrare sul sito"],
+  ["CHIUSURA_PRENOTAZIONI_MIN", 60, "Minuti prima dell'inizio in cui le prenotazioni si chiudono"],
+  ["MIN_PARTECIPANTI", 5, "Numero minimo di partecipanti perché la lezione si svolga (0 = nessun minimo)"],
+  ["RIEPILOGO_ORA_STESSO_GIORNO", "14:00", "Ora del riepilogo per le lezioni dal pomeriggio in poi (stesso giorno)"],
+  ["RIEPILOGO_ORA_GIORNO_PRIMA", "20:00", "Ora del riepilogo per le lezioni del mattino (giorno prima)"],
+  ["LEZIONI_MATTINO_FINO_ALLE", "13:00", "Le lezioni che iniziano prima di quest'ora contano come lezioni del mattino"]
+];
+
 /* ============ 1) DA ESEGUIRE UNA SOLA VOLTA: crea i fogli ============ */
 function setup() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -41,13 +55,7 @@ function setup() {
     [], [2, 3]);
   crea_(ss, FOGLI.IMPOSTAZIONI,
     ["Impostazione", "Valore", "Spiegazione"],
-    [["EMAIL_NOTIFICHE", "ashtangayogacatania@gmail.com", "Dove arrivano le nuove prenotazioni"],
-     ["NOME_STUDIO", "Ashtanga Yoga Catania", "Nome usato nelle email"],
-     ["WHATSAPP", "+39 351 669 2727", "Numero mostrato nelle email di conferma"],
-     ["INDIRIZZO", "Istituto Leonardo da Vinci, Via G.B. De La Salle 10/12, Catania (zona Canalicchio)", "Indirizzo nelle email"],
-     ["SETTIMANE_VISIBILI", 3, "Quante settimane mostrare sul sito"],
-     ["CHIUSURA_PRENOTAZIONI_MIN", 60, "Minuti prima dell'inizio in cui le prenotazioni si chiudono"]],
-    []);
+    IMPOSTAZIONI_DEFAULT, [2]);
   var s = ss.getSheetByName("Foglio1") || ss.getSheetByName("Sheet1");
   if (s && ss.getSheets().length > 1) ss.deleteSheet(s);
 
@@ -126,11 +134,11 @@ function doPost(e) {
 }
 
 /* ============ Calcolo delle lezioni ============ */
-function lezioni_() {
+function lezioni_(ignoraChiusura) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var imp = impostazioni_();
   var settimane = +imp.SETTIMANE_VISIBILI || 3;
-  var chiusura = (+imp.CHIUSURA_PRENOTAZIONI_MIN || 0) * 60000;
+  var chiusura = ignoraChiusura ? 0 : (+imp.CHIUSURA_PRENOTAZIONI_MIN || 0) * 60000;
   var now = new Date();
   var oggi = Utilities.formatDate(now, TZ, "yyyy-MM-dd");
   var lista = [];
@@ -183,13 +191,15 @@ function notifica_(l, nome, tel, email, note) {
   var studio = imp.NOME_STUDIO || "Ashtanga Yoga Catania";
   var quando = dataLunga_(l.data) + " alle " + l.ora;
   var liberi = l.posti ? (l.posti - l.prenotati - 1) : "—";
+  var min = +imp.MIN_PARTECIPANTI || 0;
+  var totale = l.prenotati + 1;
   try {
     if (imp.EMAIL_NOTIFICHE) {
       MailApp.sendEmail({
         to: imp.EMAIL_NOTIFICHE,
         replyTo: email || imp.EMAIL_NOTIFICHE,
         subject: "Nuova prenotazione: " + nome + " — " + quando,
-        body: "Nuova prenotazione dal sito\n\nLezione: " + l.titolo + "\nQuando: " + quando + "\n\nNome: " + nome + "\nTelefono: " + tel + "\nEmail: " + (email || "-") + "\nNote: " + (note || "-") + "\n\nPosti ancora liberi: " + liberi + "\n\nApri il foglio: " + SpreadsheetApp.getActiveSpreadsheet().getUrl()
+        body: "Nuova prenotazione dal sito\n\nLezione: " + l.titolo + "\nQuando: " + quando + "\n\nNome: " + nome + "\nTelefono: " + tel + "\nEmail: " + (email || "-") + "\nNote: " + (note || "-") + "\n\nPrenotati ora: " + totale + (min ? " (minimo " + min + (totale >= min ? " raggiunto ✓)" : ", ne mancano " + (min - totale) + ")") : "") + "\nPosti ancora liberi: " + liberi + "\n\nApri il foglio: " + SpreadsheetApp.getActiveSpreadsheet().getUrl()
       });
     }
     if (email) {
@@ -198,10 +208,108 @@ function notifica_(l, nome, tel, email, note) {
         replyTo: imp.EMAIL_NOTIFICHE,
         name: studio,
         subject: "Prenotazione confermata — " + quando,
-        body: "Ciao " + nome + ",\n\nla tua prenotazione è confermata:\n\n" + l.titolo + "\n" + quando + " (durata " + l.durata + " minuti)\n" + (imp.INDIRIZZO || l.sede) + "\n\nPorta abbigliamento comodo, il tuo tappetino e una copertina per il rilassamento finale.\n\nSe non puoi più venire, avvisaci rispondendo a questa email o su WhatsApp al " + (imp.WHATSAPP || "") + ": così liberiamo il posto per qualcun altro.\n\nA presto!\n" + studio
+        body: "Ciao " + nome + ",\n\nla tua prenotazione è confermata:\n\n" + l.titolo + "\n" + quando + " (durata " + l.durata + " minuti)\n" + (imp.INDIRIZZO || l.sede) + (min ? "\n\nLa lezione si svolge con almeno " + min + " partecipanti: se non si raggiunge il numero ti avvisiamo " + scadenzaTesto_(l, imp) + ", così potrai spostarti su un'altra lezione." : "") + "\n\nPorta abbigliamento comodo, il tuo tappetino e una copertina per il rilassamento finale.\n\nSe non puoi più venire, avvisaci rispondendo a questa email o su WhatsApp al " + (imp.WHATSAPP || "") + ": così liberiamo il posto per qualcun altro.\n\nA presto!\n" + studio
       });
     }
   } catch (err) { console.error("Email non inviata: " + err); }
+}
+
+/* ============ Riepilogo automatico prima di ogni lezione ============ */
+/**
+ * DA ESEGUIRE UNA SOLA VOLTA dall'editor: attiva il controllo automatico ogni 15 minuti
+ * e aggiunge alla scheda Impostazioni le voci nuove (minimo partecipanti, orari del riepilogo).
+ */
+function installaRiepilogo() {
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (t.getHandlerFunction() === "controllaRiepiloghi") ScriptApp.deleteTrigger(t);
+  });
+  ScriptApp.newTrigger("controllaRiepiloghi").timeBased().everyMinutes(15).create();
+  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(FOGLI.IMPOSTAZIONI);
+  var esistenti = righe_(sh).map(function (r) { return String(r[0]).trim(); });
+  IMPOSTAZIONI_DEFAULT.forEach(function (r) {
+    if (esistenti.indexOf(r[0]) >= 0) return;
+    sh.appendRow(r);
+    // gli orari restano testo, altrimenti Google li converte in date
+    if (typeof r[1] === "string" && /^\d{1,2}:\d{2}$/.test(r[1])) sh.getRange(sh.getLastRow(), 2).setNumberFormat("@").setValue(r[1]);
+  });
+  console.log("Riepilogo automatico attivato.");
+}
+
+/** Eseguita in automatico ogni 15 minuti: invia allo studio il riepilogo delle lezioni in arrivo. */
+function controllaRiepiloghi() {
+  var imp = impostazioni_();
+  var props = PropertiesService.getScriptProperties();
+  var now = new Date();
+  lezioniRiepilogo_().forEach(function (l) {
+    var key = "riep_" + l.id;
+    if (props.getProperty(key)) return;
+    if (now < momentoRiepilogo_(l, imp)) return;
+    inviaRiepilogo_(l, imp);
+    props.setProperty(key, "1");
+  });
+  // pulizia dei promemoria passati
+  var oggi = Utilities.formatDate(now, TZ, "yyyy-MM-dd");
+  Object.keys(props.getProperties()).forEach(function (k) {
+    if (k.indexOf("riep_") === 0 && k.substr(5, 10) < oggi) props.deleteProperty(k);
+  });
+}
+
+// Lezioni che iniziano nelle prossime 36 ore (ignora la chiusura delle prenotazioni)
+function lezioniRiepilogo_() {
+  var now = new Date().getTime();
+  return lezioni_(true).filter(function (l) {
+    var t = inizio_(l).getTime();
+    return t > now && t - now < 36 * 3600000;
+  });
+}
+
+function eMattino_(l, imp) { return l.ora < (ora_(imp.LEZIONI_MATTINO_FINO_ALLE) || "13:00"); }
+
+function momentoRiepilogo_(l, imp) {
+  if (eMattino_(l, imp)) {
+    var mezzogiorno = Utilities.parseDate(l.data + " 12:00", TZ, "yyyy-MM-dd HH:mm");
+    var ieri = Utilities.formatDate(new Date(mezzogiorno.getTime() - 86400000), TZ, "yyyy-MM-dd");
+    return Utilities.parseDate(ieri + " " + (ora_(imp.RIEPILOGO_ORA_GIORNO_PRIMA) || "20:00"), TZ, "yyyy-MM-dd HH:mm");
+  }
+  return Utilities.parseDate(l.data + " " + (ora_(imp.RIEPILOGO_ORA_STESSO_GIORNO) || "14:00"), TZ, "yyyy-MM-dd HH:mm");
+}
+
+function scadenzaTesto_(l, imp) {
+  return eMattino_(l, imp)
+    ? "entro le " + (ora_(imp.RIEPILOGO_ORA_GIORNO_PRIMA) || "20:00") + " del giorno prima"
+    : "entro le " + (ora_(imp.RIEPILOGO_ORA_STESSO_GIORNO) || "14:00") + " del giorno stesso";
+}
+
+function inviaRiepilogo_(l, imp) {
+  if (!imp.EMAIL_NOTIFICHE) return;
+  var min = +imp.MIN_PARTECIPANTI || 0;
+  var iscritti = righe_(SpreadsheetApp.getActiveSpreadsheet().getSheetByName(FOGLI.PRENOTAZIONI)).filter(function (r) {
+    return isoDa_(r[1]) === l.data && ora_(r[2]) === l.ora && String(r[8]).trim() !== "Annullata";
+  });
+  var n = iscritti.length;
+  var ok = !min || n >= min;
+  var quando = dataLunga_(l.data) + " alle " + l.ora;
+  var stato = n === 0 ? "nessun prenotato" : ok ? "minimo raggiunto" : "minimo NON raggiunto (" + n + " su " + min + ")";
+  var elenco = iscritti.map(function (r, i) {
+    return (i + 1) + ". " + r[4] + " — " + String(r[5]).replace(/^'/, "") + (r[7] ? " (" + r[7] + ")" : "");
+  }).join("\n");
+  var corpo = "Riepilogo della lezione\n\n" + l.titolo + "\n" + quando + "\n\n" +
+    "Prenotati: " + n + (min ? " (minimo " + min + ")" : "") + "\n" +
+    (elenco ? "\n" + elenco + "\n" : "") +
+    (ok ? "\nLa lezione può svolgersi regolarmente."
+        : "\nIl minimo non è stato raggiunto. Se decidete di annullare:\n" +
+          "1) aggiungete la data nella scheda \"Lezioni annullate\" (la lezione sparisce dal sito);\n" +
+          "2) avvisate i prenotati qui sopra, ad esempio su WhatsApp, proponendo un'altra lezione.") +
+    "\n\nApri il foglio: " + SpreadsheetApp.getActiveSpreadsheet().getUrl();
+  MailApp.sendEmail({ to: imp.EMAIL_NOTIFICHE, subject: (ok ? "✓ " : "⚠ ") + "Lezione di " + quando + ": " + stato, body: corpo });
+}
+
+/* Prova manuale dall'editor: mostra nel log quando partirebbero i riepiloghi delle prossime lezioni */
+function provaRiepilogo() {
+  var imp = impostazioni_();
+  lezioniRiepilogo_().forEach(function (l) {
+    console.log(l.id + " → riepilogo il " + Utilities.formatDate(momentoRiepilogo_(l, imp), TZ, "dd/MM 'alle' HH:mm") + " (prenotati " + l.prenotati + ")");
+  });
 }
 
 /* ============ Utilità ============ */

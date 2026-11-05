@@ -110,8 +110,21 @@
   /* ---------- Modale di prenotazione ---------- */
   var dlg = $("#prenota-dialog"), form = $("#prenota-form"), current = null;
 
+  // Le lezioni del mattino si confermano la sera prima, le altre entro le 14 del giorno stesso
+  // (stesse regole del riepilogo automatico nel Google Sheet)
+  function scadenzaAvviso(l) {
+    return +l.ora.split(":")[0] < 13 ? "entro le 20:00 del giorno prima" : "entro le 14:00 del giorno stesso";
+  }
+  function minNote(l) {
+    var min = +C.minimoPartecipanti || 0;
+    if (!min) return "";
+    return "La lezione si svolge con almeno " + min + " partecipanti. Se non si raggiunge il numero ti avvisiamo " + scadenzaAvviso(l) + ", così potrai spostarti su un'altra lezione.";
+  }
+
   function openBooking(l) {
     current = l;
+    var mn = minNote(l);
+    $("#dlg-min").textContent = mn; $("#dlg-min").hidden = !mn;
     $("#dlg-title").textContent = l.titolo;
     $("#dlg-when").textContent = longDate(l.data) + ", ore " + l.ora + " – " + addMin(l.ora, l.durata) + " · " + (l.sede || "");
     $("#dlg-form-wrap").hidden = false; $("#dlg-success").hidden = true;
@@ -154,6 +167,7 @@
         if (!j.ok) { msg.textContent = j.error || "Non è stato possibile completare la prenotazione."; msg.className = "form-msg err"; if (j.lezioni) { lezioni = j.lezioni; render(); } return; }
         $("#dlg-form-wrap").hidden = true; $("#dlg-success").hidden = false;
         $("#dlg-success-text").textContent = "Ti aspettiamo " + longDate(current.data).toLowerCase() + " alle " + current.ora + "." + (data.email ? " Ti abbiamo inviato una email di conferma." : "");
+        $("#dlg-success-min").textContent = (+C.minimoPartecipanti) ? "Ricorda: se non si raggiungono " + C.minimoPartecipanti + " partecipanti ti avvisiamo " + scadenzaAvviso(current) + "." : "";
         form.reset(); load();
       })
       .catch(function () {
