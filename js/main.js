@@ -132,14 +132,22 @@
     });
   }
 
+  // Arrivando da un'altra pagina con #sezione (es. ./#prezzi): vai subito alla sezione
+  // e riallinea quando il calendario ha finito di caricarsi (cambia l'altezza della pagina).
+  var ancora = location.hash && location.hash.length > 1 ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+  var ancoraToccata = false;
+  ["wheel", "touchstart", "keydown"].forEach(function (ev) { window.addEventListener(ev, function () { ancoraToccata = true; }, { once: true, passive: true }); });
+  function allinea() { if (ancora && !ancoraToccata) ancora.scrollIntoView({ behavior: "auto", block: "start" }); }
+  allinea();
+
   function load() {
-    if (!C.apiUrl) { lezioni = fallbackLezioni(); render(); return; }
+    if (!C.apiUrl) { lezioni = fallbackLezioni(); render(); allinea(); return; }
     var ctrl = window.AbortController ? new AbortController() : null;
     var t = setTimeout(function () { if (ctrl) ctrl.abort(); }, 9000);
     fetch(C.apiUrl + "?action=lezioni", ctrl ? { signal: ctrl.signal } : {})
       .then(function (r) { return r.json(); })
-      .then(function (j) { clearTimeout(t); if (!j.ok) throw new Error(j.error); lezioni = j.lezioni || []; online = true; render(); })
-      .catch(function () { clearTimeout(t); lezioni = fallbackLezioni(); online = false; render(); });
+      .then(function (j) { clearTimeout(t); if (!j.ok) throw new Error(j.error); lezioni = j.lezioni || []; online = true; render(); allinea(); })
+      .catch(function () { clearTimeout(t); lezioni = fallbackLezioni(); online = false; render(); allinea(); });
   }
   load();
 

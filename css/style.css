@@ -284,3 +284,6 @@ h1,h2,h3,.session time,.hero-badge b,.eight li::before{font-variant-numeric:lini
 .pay-box .friend{margin:14px 0 0;padding:12px 14px;background:var(--accent-soft);border-radius:10px;font-size:.9rem}
 .pay-note{font-size:.86rem;line-height:1.55;margin:-8px 0 18px;padding:0 2px;color:var(--muted)}
 @media (max-width:860px){.price-cards{grid-template-columns:1fr}.price-extra{grid-template-columns:1fr}.price-card.best{order:-1}}
+
+/* Ancore: lo spazio dell'header fisso non copre l'inizio della sezione */
+section[id]{scroll-margin-top:56px}
