@@ -41,7 +41,7 @@ function setup() {
     [], [2, 3]);
   crea_(ss, FOGLI.IMPOSTAZIONI,
     ["Impostazione", "Valore", "Spiegazione"],
-    [["EMAIL_NOTIFICHE", Session.getActiveUser().getEmail() || "talianova.veronika@gmail.com", "Dove arrivano le nuove prenotazioni"],
+    [["EMAIL_NOTIFICHE", "ashtangayogacatania@gmail.com", "Dove arrivano le nuove prenotazioni"],
      ["NOME_STUDIO", "Ashtanga Yoga Catania", "Nome usato nelle email"],
      ["WHATSAPP", "+39 351 669 2727", "Numero mostrato nelle email di conferma"],
      ["INDIRIZZO", "Istituto Leonardo da Vinci, Via G.B. De La Salle 10/12, Catania (zona Canalicchio)", "Indirizzo nelle email"],

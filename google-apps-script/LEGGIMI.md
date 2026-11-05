@@ -1,6 +1,6 @@
 # Prenotazioni con Google Sheets — installazione (15 minuti, una volta sola)
 
-Da fare con l'account Google di **chi gestisce le prenotazioni** (Veronika).
+Da fare con l'account Google dello studio: **ashtangayogacatania@gmail.com**.
 Le email di conferma partiranno da quell'indirizzo Gmail.
 
 ## 1. Crea il foglio

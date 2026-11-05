@@ -5,7 +5,7 @@ window.YOGA_CONFIG = {
   // WhatsApp: prefisso internazionale senza "+" e senza spazi
   whatsapp: "393516692727",
   whatsappDisplay: "351 669 2727",
-  email: "talianova.veronika@gmail.com",
+  email: "ashtangayogacatania@gmail.com",
 
   // Profili social: incolla l'indirizzo quando le pagine saranno create (vuoto = icona nascosta)
   instagram: "",
