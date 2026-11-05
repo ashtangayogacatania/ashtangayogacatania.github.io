@@ -42,6 +42,22 @@ Indirizzo: **https://ashtangayogacatania.github.io/gestione.html** (non è colle
 4. Da lì **non si può modificare nulla**. Per annullare o cambiare una prenotazione si usa il foglio.
 5. Per cambiare la password basta modificarla nel foglio. Dopo 10 tentativi sbagliati la pagina si blocca per 15 minuti.
 
+## 4d. Pagamenti, carnet e mensili (nella pagina riservata)
+Si paga **solo in contanti, prima della lezione**. Dopo ogni incasso:
+1. Apri gestione.html → **Pagamenti** → **+ Nuovo**.
+2. Scegli il cliente (i nomi già noti si completano da soli, con il telefono) e il **Tipo**: importo, lezioni incluse e scadenza si compilano in automatico e si possono modificare.
+3. **Registra**. Il pagamento finisce nella scheda **Pagamenti** del foglio.
+
+Cosa calcola la pagina:
+- Accanto a ogni prenotato compare lo stato: **Carnet 3/10**, **Mensile ✓**, **Pagato 18 € ✓**, **Paga in sede** (lezione futura) oppure **Da incassare / Non pagato**.
+- La sezione **Da incassare** elenca chi ha frequentato senza un pagamento registrato.
+- La sezione **Carnet e mensili attivi** mostra le lezioni rimaste e la scadenza, ed evidenzia chi sta per finire il carnet.
+- In alto c'è il totale incassato nel mese corrente e in quello precedente.
+
+Il collegamento tra prenotazioni e pagamenti avviene tramite il **numero di telefono**, quindi inseritelo sempre. La lezione singola risulta pagata se la data del pagamento coincide con quella della lezione.
+Errori di inserimento: si correggono o si cancellano direttamente nella scheda **Pagamenti** del foglio. Dalla pagina si può solo aggiungere.
+I prezzi del listino si cambiano in `js/config.js` (voce `listino`) e si aggiornano sia sul sito sia nel modulo.
+
 ## 5. Collega il sito
 Apri `js/config.js` e incolla l'URL:
 ```js

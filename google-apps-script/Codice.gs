@@ -14,7 +14,8 @@ var FOGLI = {
   EXTRA: "Lezioni extra",
   ANNULLATE: "Lezioni annullate",
   PRENOTAZIONI: "Prenotazioni",
-  IMPOSTAZIONI: "Impostazioni"
+  IMPOSTAZIONI: "Impostazioni",
+  PAGAMENTI: "Pagamenti"
 };
 var GIORNI = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
 var TZ = "Europe/Rome";
@@ -94,6 +95,7 @@ function doPost(e) {
   try {
     var d = JSON.parse(e.postData.contents || "{}");
     if (d.action === "gestione") return json_(gestione_(d));
+    if (d.action === "registraPagamento") return json_(registraPagamento_(d));
     if (d.action !== "prenota") return json_({ ok: false, error: "Azione non valida" });
     if (d.hp) return json_({ ok: true }); // trappola anti-spam: i bot compilano il campo nascosto
 
@@ -314,12 +316,14 @@ function provaRiepilogo() {
   });
 }
 
-/* ============ Pagina riservata (gestione.html): sola lettura, protetta da password ============ */
-function gestione_(d) {
+/* ============ Pagina riservata (gestione.html), protetta da password ============ */
+// Lettura di prenotazioni e pagamenti + registrazione di nuovi pagamenti (solo aggiunta, mai modifica o cancellazione)
+var COLONNE_PAGAMENTI = ["Data pagamento", "Cliente", "Telefono", "Tipo", "Importo (€)", "Lezioni incluse (0 = illimitate)", "Valido fino al", "Note", "Registrato il"];
+
+function autorizza_(d) {
   var imp = impostazioni_();
   var pwd = String(imp.PASSWORD_GESTIONE || "");
   if (pwd.length < 10) return { ok: false, error: "Pagina non attiva: imposta PASSWORD_GESTIONE (almeno 10 caratteri) nella scheda Impostazioni del foglio." };
-
   // Blocco anti-tentativi: dopo 10 password errate la pagina si blocca per 15 minuti
   var cache = CacheService.getScriptCache();
   var errori = +(cache.get("gestione_err") || 0);
@@ -329,12 +333,26 @@ function gestione_(d) {
     Utilities.sleep(800);
     return { ok: false, auth: false, error: "Password errata." };
   }
+  return null;
+}
 
+function foglioPagamenti_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(FOGLI.PAGAMENTI);
+  if (!sh) crea_(ss, FOGLI.PAGAMENTI, COLONNE_PAGAMENTI, [], [1, 3, 7]);
+  return ss.getSheetByName(FOGLI.PAGAMENTI);
+}
+
+function gestione_(d) {
+  var no = autorizza_(d);
+  if (no) return no;
+  var imp = impostazioni_();
   var now = new Date();
   var oggi = Utilities.formatDate(now, TZ, "yyyy-MM-dd");
-  var da = Utilities.formatDate(new Date(now.getTime() - 7 * 86400000), TZ, "yyyy-MM-dd");
+  var giorniFa = function (n) { return Utilities.formatDate(new Date(now.getTime() - n * 86400000), TZ, "yyyy-MM-dd"); };
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
+  // prenotazioni degli ultimi 4 mesi (servono anche per contare le lezioni usate dai carnet)
   var prenotazioni = righe_(ss.getSheetByName(FOGLI.PRENOTAZIONI)).map(function (r) {
     return {
       ricevuta: r[0] instanceof Date ? Utilities.formatDate(r[0], TZ, "dd/MM HH:mm") : String(r[0]),
@@ -343,14 +361,22 @@ function gestione_(d) {
       email: String(r[6] || ""), note: String(r[7] || ""),
       stato: String(r[8] || "").trim() || "Confermata"
     };
-  }).filter(function (p) { return p.data && p.data >= da; });
+  }).filter(function (p) { return p.data && p.data >= giorniFa(124); });
+
+  var pagamenti = righe_(foglioPagamenti_()).map(function (r, i) {
+    return {
+      riga: i + 2, data: isoDa_(r[0]), cliente: String(r[1] || ""), telefono: String(r[2] || "").replace(/^'/, ""),
+      tipo: String(r[3] || ""), importo: +String(r[4]).replace(",", ".") || 0,
+      lezioni: r[5] === "" ? 1 : +r[5] || 0, scadenza: isoDa_(r[6]), note: String(r[7] || "")
+    };
+  }).filter(function (p) { return p.data && p.data >= giorniFa(400); });
 
   var lezioni = lezioni_(true).map(function (l) {
     return { id: l.id, data: l.data, ora: l.ora, durata: l.durata, titolo: l.titolo, sede: l.sede, posti: l.posti };
   });
   var annullate = righe_(ss.getSheetByName(FOGLI.ANNULLATE)).map(function (r) {
     return { data: isoDa_(r[0]), ora: ora_(r[1]), motivo: String(r[2] || "") };
-  }).filter(function (a) { return a.data && a.data >= da; });
+  }).filter(function (a) { return a.data && a.data >= giorniFa(124); });
 
   return {
     ok: true,
@@ -359,9 +385,30 @@ function gestione_(d) {
     minimo: +imp.MIN_PARTECIPANTI || 0,
     lezioni: lezioni,
     prenotazioni: prenotazioni,
+    pagamenti: pagamenti,
     annullate: annullate,
     foglio: ss.getUrl()
   };
+}
+
+function registraPagamento_(d) {
+  var no = autorizza_(d);
+  if (no) return no;
+  var p = d.pagamento || {};
+  var data = isoDa_(p.data), cliente = pulisci_(p.cliente, 80), tipo = pulisci_(p.tipo, 60);
+  var importo = +String(p.importo).replace(",", ".");
+  if (!data || !cliente || !tipo) return { ok: false, error: "Compila data, cliente e tipo." };
+  if (!(importo >= 0) || importo > 5000) return { ok: false, error: "Importo non valido." };
+  var lezioni = Math.max(0, Math.min(200, Math.round(+p.lezioni || 0)));
+  var scad = isoDa_(p.scadenza);
+  var lock = LockService.getScriptLock();
+  lock.waitLock(15000);
+  try {
+    var sh = foglioPagamenti_();
+    sh.appendRow(["'" + itDa_(data), cliente, "'" + pulisci_(p.telefono, 30), tipo, importo, lezioni, scad ? "'" + itDa_(scad) : "", pulisci_(p.note, 300), new Date()]);
+    SpreadsheetApp.flush();
+  } finally { lock.releaseLock(); }
+  return gestione_(d);
 }
 
 function uguali_(a, b) { // confronto a tempo costante

@@ -48,6 +48,29 @@
     $$(".reveal").forEach(function (el) { io.observe(el); });
   } else { $$(".reveal").forEach(function (el) { el.classList.add("in"); }); }
 
+  /* ---------- Prezzi (dal listino in config.js) ---------- */
+  var listino = C.listino || [];
+  function euro(n) { return (+n).toLocaleString("it-IT", { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + " €"; }
+  var pc = $("#price-cards"), pl = $("#price-list");
+  if (pc) {
+    pc.innerHTML = listino.filter(function (x) { return x.evidenza; }).map(function (x) {
+      var per = x.lezioni > 1 ? '<span class="per">' + euro(x.prezzo / x.lezioni) + " a lezione</span>" : x.lezioni === 0 ? '<span class="per">lezioni illimitate</span>' : '<span class="per">a lezione</span>';
+      return '<div class="price-card' + (x.evidenza === "consigliato" ? " best" : "") + '">' +
+        (x.evidenza === "consigliato" ? '<span class="tag">Il più scelto</span>' : "") +
+        "<h3>" + esc(x.nome) + '</h3><div class="amount">' + euro(x.prezzo) + "</div>" + per +
+        "<p>" + esc(x.nota || "") + "</p></div>";
+    }).join("");
+    pl.innerHTML = listino.filter(function (x) { return !x.evidenza; }).map(function (x) {
+      return "<li><div><b>" + esc(x.nome) + "</b><span>" + esc(x.nota || "") + '</span></div><strong class="amount-sm">' + euro(x.prezzo) + "</strong></li>";
+    }).join("");
+    var q = $("#quota-line");
+    if (q && C.quotaAssociativa) q.textContent = "È richiesta l'iscrizione annuale all'associazione (tessera e assicurazione): " + euro(C.quotaAssociativa) + ".";
+  }
+  function payNote() {
+    var s = listino.filter(function (x) { return x.id === "singola"; })[0], c = listino.filter(function (x) { return x.id === "carnet10"; })[0];
+    return "Si paga in contanti prima della lezione" + (s ? ": " + euro(s.prezzo) + " la singola" : "") + (c ? ", oppure " + c.nome.toLowerCase() + " a " + euro(c.prezzo) : "") + ".";
+  }
+
   /* ---------- Calendario lezioni ---------- */
   var box = $("#calendario-lezioni");
   if (!box) return;
@@ -138,6 +161,7 @@
     current = l;
     var mn = minNote(l);
     $("#dlg-min").textContent = mn; $("#dlg-min").hidden = !mn;
+    if (listino.length) { $("#dlg-pay").innerHTML = esc(payNote()) + ' <a href="#prezzi">Tutti i prezzi</a>'; $("#dlg-pay").hidden = false; }
     $("#dlg-title").textContent = l.titolo;
     $("#dlg-when").textContent = longDate(l.data) + ", ore " + l.ora + " – " + addMin(l.ora, l.durata) + " · " + (l.sede || "");
     $("#dlg-form-wrap").hidden = false; $("#dlg-success").hidden = true;

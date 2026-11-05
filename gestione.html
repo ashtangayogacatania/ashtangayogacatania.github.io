@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>Gestione prenotazioni — Ashtanga Yoga Catania</title>
+<title>Gestione — Ashtanga Yoga Catania</title>
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css">
 <style>
@@ -17,7 +17,7 @@
   .login{max-width:380px;margin:12vh auto 0;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:32px 28px}
   .login h1{font-size:2rem}
   .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:18px}
-  .tabs{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px}
+  .tabs{display:inline-flex;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px}
   .tabs button{border:0;background:none;font:500 .86rem var(--sans);padding:8px 14px;border-radius:999px;cursor:pointer;color:var(--muted)}
   .tabs button[aria-pressed=true]{background:var(--ink);color:#fff}
   .search{flex:1;min-width:180px;max-width:320px;font:inherit;font-size:16px;padding:9px 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
@@ -25,15 +25,16 @@
   .stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
   .stat b{display:block;font:500 1.8rem/1 var(--serif);font-variant-numeric:lining-nums}
   .stat span{font-size:.78rem;color:var(--muted)}
-  .lesson{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:14px;overflow:hidden}
-  .lesson-h{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}
-  .lesson-h h2{font:600 1rem/1.3 var(--sans);margin:0}
-  .lesson-h small{display:block;font-weight:400;color:var(--muted);font-size:.82rem;margin-top:2px}
-  .pill{display:inline-block;font:600 .74rem/1 var(--sans);padding:6px 10px;border-radius:999px;white-space:nowrap}
-  .ok{background:#E3EFE0;color:#2F5D2A}.warn{background:#FBEBD9;color:#8A4B12}.off{background:#EEE;color:#666}
+  .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:14px;overflow:hidden}
+  .box-h{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}
+  .box-h h2{font:600 1rem/1.3 var(--sans);margin:0}
+  .box-h small{display:block;font-weight:400;color:var(--muted);font-size:.82rem;margin-top:2px}
+  .pill{display:inline-block;font:600 .74rem/1 var(--sans);padding:6px 10px;border-radius:999px;white-space:nowrap;margin:1px 0}
+  .ok{background:#E3EFE0;color:#2F5D2A}.warn{background:#FBEBD9;color:#8A4B12}.off{background:#EEE;color:#666}.info{background:#E7EEF6;color:#2D4E73}
   table{width:100%;border-collapse:collapse;font-size:.9rem}
   td,th{padding:10px 18px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
   th{font:600 .7rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:#FCFAF7}
+  td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
   tr:last-child td{border-bottom:0}
   tr.annullata td{color:#999;text-decoration:line-through}
   tr.annullata td.st{text-decoration:none}
@@ -42,15 +43,29 @@
   .empty{padding:16px 18px;color:var(--muted);font-size:.9rem}
   .g-note{color:var(--muted);font-size:.84rem;font-weight:400;margin:0}
   .upd{font-size:.8rem;color:var(--muted)}
-  @media (max-width:560px){#upd{display:none}.g-top b{font-size:1.05rem}}
   .err{color:#B3261E;font-size:.9rem;margin-top:12px}
+  .okmsg{color:#2F5D2A;font-size:.9rem;margin-top:12px}
+  /* modulo pagamento */
+  .payform{padding:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px 14px}
+  .payform .field{margin:0}
+  .payform .wide{grid-column:span 2}
+  .payform .full{grid-column:1 / -1}
+  .payform input,.payform select{width:100%;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+  .payform label{display:block;font-size:.8rem;font-weight:500;margin-bottom:5px}
+  .payform .hint{font-size:.78rem;color:var(--muted);margin-top:4px}
+  details.box summary{list-style:none;cursor:pointer}
+  details.box summary::-webkit-details-marker{display:none}
+  details.box summary .btn{pointer-events:none}
+  @media (max-width:560px){#upd{display:none}.g-top b{font-size:1.05rem}}
   @media (max-width:700px){
-    .stats{grid-template-columns:repeat(3,1fr)}
     .stat b{font-size:1.4rem}
+    .payform{grid-template-columns:1fr 1fr}
+    .payform .wide{grid-column:1 / -1}
     thead{display:none}
     table,tbody,tr,td{display:block;width:100%}
     tr{padding:12px 16px;border-bottom:1px solid var(--line)}
     td{border:0;padding:2px 0}
+    td.num{text-align:left}
     td.n{font-weight:600}
     td:empty{display:none}
   }
@@ -60,7 +75,7 @@
 
 <header class="g-top">
   <div class="wrap">
-    <b>Gestione prenotazioni</b>
+    <b>Gestione</b>
     <div class="g-actions" id="g-actions" hidden>
       <span class="upd" id="upd"></span>
       <button class="btn btn-ghost btn-sm" id="refresh" type="button">Aggiorna</button>
@@ -73,7 +88,7 @@
   <form class="login" id="login" hidden>
     <span class="eyebrow">Area riservata</span>
     <h1>Accedi</h1>
-    <p class="muted" style="font-size:.9rem">Solo lettura: da qui non si può modificare né cancellare nulla.</p>
+    <p class="muted" style="font-size:.9rem">Consulta prenotazioni e pagamenti e registra gli incassi. Da qui non si può cancellare nulla.</p>
     <div class="field"><label for="pwd">Password</label><input id="pwd" type="password" autocomplete="current-password" required></div>
     <button class="btn btn-primary" style="width:100%" type="submit" id="login-btn">Entra</button>
     <p class="err" id="login-err" role="alert"></p>
@@ -82,14 +97,33 @@
   <section id="dash" hidden style="padding:0">
     <div class="stats" id="stats"></div>
     <div class="bar">
-      <div class="tabs" role="group" aria-label="Periodo">
+      <div class="tabs" role="group" aria-label="Vista">
         <button type="button" data-view="prossime" aria-pressed="true">Prossime lezioni</button>
         <button type="button" data-view="passate" aria-pressed="false">Ultimi 7 giorni</button>
+        <button type="button" data-view="pagamenti" aria-pressed="false">Pagamenti</button>
       </div>
       <input class="search" id="q" type="search" placeholder="Cerca nome o telefono…" aria-label="Cerca">
     </div>
+
+    <div id="pay-area" hidden>
+      <details class="box" id="pay-details">
+        <summary class="box-h"><h2>Registra un pagamento<small>Contanti ricevuti: carnet, mensile, lezione singola, quota…</small></h2><span class="btn btn-primary btn-sm">+ Nuovo</span></summary>
+        <form class="payform" id="payform" autocomplete="off">
+          <div class="field wide"><label for="p-cliente">Cliente *</label><input id="p-cliente" list="clienti" required maxlength="80" placeholder="Nome e cognome"><datalist id="clienti"></datalist></div>
+          <div class="field wide"><label for="p-tel">Telefono</label><input id="p-tel" type="tel" inputmode="tel" maxlength="30" placeholder="Serve per collegare le prenotazioni"></div>
+          <div class="field wide"><label for="p-tipo">Tipo *</label><select id="p-tipo" required></select></div>
+          <div class="field"><label for="p-importo">Importo € *</label><input id="p-importo" type="number" step="0.5" min="0" required></div>
+          <div class="field"><label for="p-data">Data *</label><input id="p-data" type="date" required></div>
+          <div class="field"><label for="p-lezioni">Lezioni incluse</label><input id="p-lezioni" type="number" min="0" max="200"><div class="hint">0 = illimitate</div></div>
+          <div class="field"><label for="p-scad">Valido fino al</label><input id="p-scad" type="date"></div>
+          <div class="field wide"><label for="p-note">Note</label><input id="p-note" maxlength="300" placeholder="es. scalati 10 € della prima lezione"></div>
+          <div class="full"><button class="btn btn-primary" type="submit" id="p-btn">Registra pagamento</button><p class="err" id="p-err" role="alert"></p><p class="okmsg" id="p-ok" role="status"></p></div>
+        </form>
+      </details>
+    </div>
+
     <div id="list"></div>
-    <p class="upd" style="margin-top:20px">Per modificare o annullare una prenotazione usa il <a id="sheet-link" target="_blank" rel="noopener">foglio Google</a>. I dati si aggiornano da soli ogni minuto.</p>
+    <p class="upd" style="margin-top:20px">Per correggere o annullare usa il <a id="sheet-link" target="_blank" rel="noopener">foglio Google</a> (schede Prenotazioni e Pagamenti). I dati si aggiornano da soli ogni minuto.</p>
   </section>
 </main>
 
@@ -98,26 +132,30 @@
 (function () {
   "use strict";
   var C = window.YOGA_CONFIG || {};
+  var LISTINO = (C.listino || []).concat([{ id: "quota", nome: "Quota associativa", prezzo: +C.quotaAssociativa || 0, lezioni: 0, mesi: 12, nonLezioni: true }, { id: "altro", nome: "Altro", prezzo: 0, lezioni: 0, nonLezioni: true }]);
   var KEY = "yoga_gestione";
   var GIORNI = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
   var MESI = ["gen", "feb", "mar", "apr", "mag", "giu", "lug", "ago", "set", "ott", "nov", "dic"];
+  var MESI_L = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
   var $ = function (s) { return document.querySelector(s); };
-  var data = null, view = "prossime", timer = null;
+  var data = null, view = "prossime", timer = null, cov = null;
 
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function getPwd() { try { return sessionStorage.getItem(KEY) || ""; } catch (e) { return ""; } }
   function setPwd(v) { try { v ? sessionStorage.setItem(KEY, v) : sessionStorage.removeItem(KEY); } catch (e) {} }
-  function giorno(iso) { var p = iso.split("-"), d = new Date(+p[0], p[1] - 1, +p[2]); return GIORNI[d.getDay()] + " " + d.getDate() + " " + MESI[d.getMonth()]; }
-  function waNum(t) {
-    var n = String(t).replace(/\D/g, "");
-    if (n.indexOf("00") === 0) n = n.slice(2);
-    if (n.length === 10 && n[0] === "3") n = "39" + n;
-    return n;
-  }
+  function pd(iso) { var p = iso.split("-"); return new Date(+p[0], p[1] - 1, +p[2]); }
+  function iso(d) { return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+  function giorno(s) { var d = pd(s); return GIORNI[d.getDay()] + " " + d.getDate() + " " + MESI[d.getMonth()]; }
+  function breve(s) { if (!s) return "—"; var d = pd(s); return d.getDate() + " " + MESI[d.getMonth()]; }
+  function euro(n) { return (+n || 0).toLocaleString("it-IT", { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + " €"; }
+  function waNum(t) { var n = String(t).replace(/\D/g, ""); if (n.indexOf("00") === 0) n = n.slice(2); if (n.length === 10 && n[0] === "3") n = "39" + n; return n; }
+  // chiave cliente: ultime 9 cifre del telefono, altrimenti il nome
+  function chiave(tel, nome) { var n = String(tel || "").replace(/\D/g, ""); return n.length >= 6 ? "t" + n.slice(-9) : "n" + String(nome || "").trim().toLowerCase(); }
+  function voce(tipo) { return LISTINO.filter(function (x) { return x.nome === tipo; })[0]; }
 
-  function call(pwd) {
-    return fetch(C.apiUrl, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "gestione", password: pwd }) })
-      .then(function (r) { return r.json(); });
+  function call(body) {
+    body.password = getPwd();
+    return fetch(C.apiUrl, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body) }).then(function (r) { return r.json(); });
   }
 
   function showLogin(msg) {
@@ -126,46 +164,72 @@
     $("#login-err").textContent = msg || "";
     setTimeout(function () { $("#pwd").focus(); }, 30);
   }
-
+  function apply(j) {
+    if (!j.ok) { if (j.auth === false) setPwd(""); showLogin(j.error); return false; }
+    data = j; data.pagamenti = data.pagamenti || [];
+    cov = copertura();
+    $("#login").hidden = true; $("#dash").hidden = false; $("#g-actions").hidden = false;
+    $("#upd").textContent = "Aggiornato alle " + j.aggiornato.slice(-5);
+    $("#sheet-link").href = j.foglio;
+    fillClienti();
+    render();
+    return true;
+  }
   function load(silent) {
-    var pwd = getPwd();
-    if (!pwd) return showLogin();
+    if (!getPwd()) return Promise.resolve(showLogin());
     if (!silent) $("#upd").textContent = "Aggiornamento…";
-    return call(pwd).then(function (j) {
-      if (!j.ok) {
-        if (j.auth === false) setPwd("");
-        return showLogin(j.error);
-      }
-      data = j;
-      $("#login").hidden = true; $("#dash").hidden = false; $("#g-actions").hidden = false;
-      $("#upd").textContent = "Aggiornato alle " + j.aggiornato.slice(-5);
-      $("#sheet-link").href = j.foglio;
-      render();
-    }).catch(function () { $("#upd").textContent = "Connessione non riuscita, riprovo…"; });
+    return call({ action: "gestione" }).then(apply).catch(function () { $("#upd").textContent = "Connessione non riuscita, riprovo…"; });
+  }
+  function startTimer() { clearInterval(timer); timer = setInterval(function () { if (!document.activeElement || !$("#payform").contains(document.activeElement)) load(true); }, 60000); }
+
+  /* ---------- Chi ha pagato cosa: abbina le prenotazioni ai pagamenti ---------- */
+  function annullataLezione(b) { return data.annullate.some(function (a) { return a.data === b.data && (!a.ora || a.ora === b.ora); }); }
+  function copertura() {
+    var oggi = data.oggi, perBooking = {}, pacchetti = [];
+    var pag = data.pagamenti.map(function (p, i) {
+      var v = voce(p.tipo);
+      var kind = v && v.nonLezioni ? null : (p.lezioni === 0 ? "illimitato" : p.lezioni > 1 ? "carnet" : "singola");
+      return { i: i, p: p, kind: kind, k: chiave(p.telefono, p.cliente), usate: 0, prenotate: 0, usata: false };
+    }).sort(function (a, b) { return a.p.data < b.p.data ? -1 : 1; });
+    pag.forEach(function (x) { if (x.kind === "carnet" || x.kind === "illimitato") pacchetti.push(x); });
+    var bookings = data.prenotazioni.map(function (b, i) { return { b: b, i: i }; })
+      .filter(function (x) { return x.b.stato !== "Annullata" && !annullataLezione(x.b); })
+      .sort(function (a, b) { return (a.b.data + a.b.ora) < (b.b.data + b.b.ora) ? -1 : 1; });
+    bookings.forEach(function (x) {
+      var b = x.b, k = chiave(b.telefono, b.nome), passata = b.data <= oggi;
+      var dentro = function (y) { return y.k === k && y.p.data <= b.data && (!y.p.scadenza || b.data <= y.p.scadenza); };
+      var m = pacchetti.filter(function (y) { return y.kind === "illimitato" && dentro(y); })[0];
+      if (m) { perBooking[x.i] = { cls: "ok", txt: "Mensile ✓" }; passata ? m.usate++ : m.prenotate++; return; }
+      var c = pacchetti.filter(function (y) { return y.kind === "carnet" && dentro(y) && y.usate + y.prenotate < y.p.lezioni; })[0];
+      if (c) { passata ? c.usate++ : c.prenotate++; perBooking[x.i] = { cls: "ok", txt: "Carnet " + (c.usate + c.prenotate) + "/" + c.p.lezioni }; return; }
+      var s = pag.filter(function (y) { return y.kind === "singola" && !y.usata && y.k === k && y.p.data === b.data; })[0];
+      if (s) { s.usata = true; perBooking[x.i] = { cls: "ok", txt: "Pagato " + euro(s.p.importo) + " ✓" }; return; }
+      perBooking[x.i] = b.data < oggi ? { cls: "warn", txt: "Non pagato", daIncassare: true } : b.data === oggi ? { cls: "warn", txt: "Da incassare", daIncassare: true } : { cls: "info", txt: "Paga in sede" };
+    });
+    return { perBooking: perBooking, pacchetti: pacchetti };
   }
 
+  /* ---------- Viste ---------- */
   function gruppi() {
     var map = {}, oggi = data.oggi;
-    data.lezioni.forEach(function (l) { map[l.id] = { data: l.data, ora: l.ora, titolo: l.titolo, sede: l.sede, posti: l.posti, persone: [] }; });
-    data.prenotazioni.forEach(function (p) {
+    data.lezioni.forEach(function (l) { map[l.id] = { data: l.data, ora: l.ora, titolo: l.titolo, posti: l.posti, persone: [] }; });
+    data.prenotazioni.forEach(function (p, i) {
       var id = p.data + " " + p.ora;
-      if (!map[id]) map[id] = { data: p.data, ora: p.ora, titolo: p.titolo, sede: "", posti: 0, persone: [] };
-      map[id].persone.push(p);
+      if (!map[id]) map[id] = { data: p.data, ora: p.ora, titolo: p.titolo, posti: 0, persone: [] };
+      map[id].persone.push({ p: p, i: i });
     });
-    var out = Object.keys(map).map(function (k) {
+    var sette = iso(new Date(pd(oggi).getTime() - 7 * 864e5));
+    return Object.keys(map).map(function (k) {
       var g = map[k];
       g.annullata = data.annullate.some(function (a) { return a.data === g.data && (!a.ora || a.ora === g.ora); });
-      g.attivi = g.persone.filter(function (p) { return p.stato !== "Annullata"; }).length;
+      g.attivi = g.persone.filter(function (x) { return x.p.stato !== "Annullata"; }).length;
       g.futura = g.data > oggi || (g.data === oggi && data.lezioni.some(function (l) { return l.id === g.data + " " + g.ora; }));
+      g.recente = !g.futura && g.data >= sette;
       return g;
-    });
-    out.sort(function (a, b) { var x = a.data + a.ora, y = b.data + b.ora; return view === "prossime" ? (x < y ? -1 : 1) : (x > y ? -1 : 1); });
-    return out;
+    }).sort(function (a, b) { var x = a.data + a.ora, y = b.data + b.ora; return view === "prossime" ? (x < y ? -1 : 1) : (x > y ? -1 : 1); });
   }
 
-  function render() {
-    var q = $("#q").value.trim().toLowerCase();
-    var all = gruppi();
+  function statsLezioni(all) {
     var fut = all.filter(function (g) { return g.futura && !g.annullata; });
     var sotto = fut.filter(function (g) { return data.minimo && g.attivi < data.minimo; }).length;
     var tot = fut.reduce(function (s, g) { return s + g.attivi; }, 0);
@@ -173,46 +237,139 @@
       '<div class="stat"><b>' + fut.length + '</b><span>lezioni in programma</span></div>' +
       '<div class="stat"><b>' + tot + '</b><span>prenotazioni attive</span></div>' +
       '<div class="stat"><b>' + sotto + '</b><span>sotto il minimo di ' + data.minimo + '</span></div>';
+  }
 
-    var list = all.filter(function (g) { return view === "prossime" ? g.futura : !g.futura; });
+  function renderLezioni(q) {
+    var all = gruppi();
+    statsLezioni(all);
+    var list = all.filter(function (g) { return view === "prossime" ? g.futura : g.recente; });
     if (q) list = list.map(function (g) {
       var c = Object.assign({}, g);
-      c.persone = g.persone.filter(function (p) { return (p.nome + " " + p.telefono + " " + p.email).toLowerCase().indexOf(q) >= 0; });
+      c.persone = g.persone.filter(function (x) { return (x.p.nome + " " + x.p.telefono + " " + x.p.email).toLowerCase().indexOf(q) >= 0; });
       return c;
     }).filter(function (g) { return g.persone.length; });
-
-    if (!list.length) { $("#list").innerHTML = '<div class="lesson"><div class="empty">' + (q ? "Nessun risultato." : view === "prossime" ? "Nessuna lezione in programma." : "Nessuna prenotazione negli ultimi 7 giorni.") + "</div></div>"; return; }
-
-    $("#list").innerHTML = list.map(function (g) {
+    if (!list.length) return '<div class="box"><div class="empty">' + (q ? "Nessun risultato." : view === "prossime" ? "Nessuna lezione in programma." : "Nessuna prenotazione negli ultimi 7 giorni.") + "</div></div>";
+    return list.map(function (g) {
       var pill = g.annullata ? '<span class="pill off">Lezione annullata</span>'
         : !data.minimo ? '<span class="pill ok">' + g.attivi + " iscritti</span>"
         : g.attivi >= data.minimo ? '<span class="pill ok">✓ ' + g.attivi + " iscritti · minimo raggiunto</span>"
         : '<span class="pill warn">' + g.attivi + " su " + data.minimo + " · ne mancano " + (data.minimo - g.attivi) + "</span>";
-      var righe = g.persone.length ? '<table><thead><tr><th>Nome</th><th>Contatti</th><th>Note</th><th>Stato</th></tr></thead><tbody>' +
-        g.persone.map(function (p) {
-          var w = waNum(p.telefono);
+      var righe = g.persone.length ? '<table><thead><tr><th>Nome</th><th>Contatti</th><th>Note</th><th>Stato</th><th>Pagamento</th></tr></thead><tbody>' +
+        g.persone.map(function (x) {
+          var p = x.p, w = waNum(p.telefono), c = cov.perBooking[x.i];
           return '<tr class="' + (p.stato === "Annullata" ? "annullata" : "") + '">' +
             '<td class="n">' + esc(p.nome) + '<div class="g-note">prenotato il ' + esc(p.ricevuta) + "</div></td>" +
             '<td class="contact">' + (w ? '<a class="wa" href="https://wa.me/' + w + '" target="_blank" rel="noopener">WhatsApp</a><a href="tel:+' + w + '">' + esc(p.telefono) + "</a>" : "") +
             (p.email ? '<br><a href="mailto:' + esc(p.email) + '">' + esc(p.email) + "</a>" : "") + "</td>" +
             '<td class="g-note">' + esc(p.note) + "</td>" +
-            '<td class="st"><span class="pill ' + (p.stato === "Annullata" ? "off" : "ok") + '">' + esc(p.stato) + "</span></td></tr>";
+            '<td class="st"><span class="pill ' + (p.stato === "Annullata" ? "off" : "ok") + '">' + esc(p.stato) + "</span></td>" +
+            '<td class="st">' + (c ? '<span class="pill ' + c.cls + '">' + esc(c.txt) + "</span>" : "") + "</td></tr>";
         }).join("") + "</tbody></table>"
         : '<div class="empty">Ancora nessun prenotato.</div>';
-      return '<article class="lesson"><div class="lesson-h"><h2>' + esc(giorno(g.data)) + " · " + esc(g.ora) +
+      return '<article class="box"><div class="box-h"><h2>' + esc(giorno(g.data)) + " · " + esc(g.ora) +
         "<small>" + esc(g.titolo) + (g.posti ? " · " + g.attivi + "/" + g.posti + " posti" : "") + "</small></h2>" + pill + "</div>" + righe + "</article>";
     }).join("");
   }
 
+  function renderPagamenti(q) {
+    var oggi = data.oggi, mese = oggi.slice(0, 7);
+    var pm = pd(oggi); pm.setMonth(pm.getMonth() - 1); var meseScorso = iso(pm).slice(0, 7);
+    var somma = function (m) { return data.pagamenti.filter(function (p) { return p.data.slice(0, 7) === m; }).reduce(function (s, p) { return s + p.importo; }, 0); };
+    var attivi = cov.pacchetti.filter(function (y) { return (!y.p.scadenza || y.p.scadenza >= oggi) && (y.kind === "illimitato" || y.usate + y.prenotate < y.p.lezioni || y.prenotate > 0); });
+    $("#stats").innerHTML =
+      '<div class="stat"><b>' + euro(somma(mese)) + '</b><span>incassato a ' + MESI_L[+mese.slice(5) - 1] + '</span></div>' +
+      '<div class="stat"><b>' + euro(somma(meseScorso)) + '</b><span>incassato a ' + MESI_L[+meseScorso.slice(5) - 1] + '</span></div>' +
+      '<div class="stat"><b>' + attivi.length + '</b><span>carnet e mensili attivi</span></div>';
+    var match = function (s) { return !q || String(s).toLowerCase().indexOf(q) >= 0; };
+
+    // 1) da incassare
+    var dovuti = [];
+    data.prenotazioni.forEach(function (b, i) { var c = cov.perBooking[i]; if (c && c.daIncassare && match(b.nome + " " + b.telefono)) dovuti.push(b); });
+    dovuti.sort(function (a, b) { return (a.data + a.ora) < (b.data + b.ora) ? 1 : -1; });
+    var h = '<article class="box"><div class="box-h"><h2>Da incassare<small>Prenotati a lezioni di oggi o degli ultimi giorni senza pagamento registrato</small></h2>' +
+      (dovuti.length ? '<span class="pill warn">' + dovuti.length + "</span>" : '<span class="pill ok">Tutto in ordine ✓</span>') + "</div>" +
+      (dovuti.length ? "<table><thead><tr><th>Cliente</th><th>Lezione</th><th>Contatti</th></tr></thead><tbody>" + dovuti.map(function (b) {
+        var w = waNum(b.telefono);
+        return '<tr><td class="n">' + esc(b.nome) + '</td><td>' + esc(giorno(b.data)) + " · " + esc(b.ora) + '</td><td class="contact">' + (w ? '<a class="wa" href="https://wa.me/' + w + '" target="_blank" rel="noopener">WhatsApp</a>' : "") + esc(b.telefono) + "</td></tr>";
+      }).join("") + "</tbody></table>" : '<div class="empty">Nessun pagamento in sospeso.</div>') + "</article>";
+
+    // 2) carnet e mensili attivi
+    var att = attivi.filter(function (y) { return match(y.p.cliente + " " + y.p.telefono); }).sort(function (a, b) { return a.p.cliente.localeCompare(b.p.cliente); });
+    h += '<article class="box"><div class="box-h"><h2>Carnet e mensili attivi<small>Le lezioni usate si contano dalle prenotazioni con lo stesso numero di telefono</small></h2></div>' +
+      (att.length ? "<table><thead><tr><th>Cliente</th><th>Tipo</th><th>Dal</th><th>Scade</th><th>Lezioni</th></tr></thead><tbody>" + att.map(function (y) {
+        var resto = y.kind === "illimitato" ? null : y.p.lezioni - y.usate - y.prenotate;
+        var scadePresto = y.p.scadenza && (pd(y.p.scadenza) - pd(oggi)) / 864e5 <= 7;
+        var stato = y.kind === "illimitato" ? '<span class="pill ok">illimitate · ' + y.usate + " fatte</span>"
+          : '<span class="pill ' + (resto <= 1 ? "warn" : "ok") + '">restano ' + resto + " su " + y.p.lezioni + "</span>" + (y.prenotate ? ' <span class="g-note">(' + y.usate + " fatte, " + y.prenotate + " prenotate)</span>" : ' <span class="g-note">(' + y.usate + " fatte)</span>");
+        return '<tr><td class="n">' + esc(y.p.cliente) + '</td><td>' + esc(y.p.tipo) + "</td><td>" + esc(breve(y.p.data)) + "</td><td>" + (scadePresto ? '<span class="pill warn">' + esc(breve(y.p.scadenza)) + "</span>" : esc(breve(y.p.scadenza))) + "</td><td>" + stato + "</td></tr>";
+      }).join("") + "</tbody></table>" : '<div class="empty">Nessun carnet o mensile attivo.</div>') + "</article>";
+
+    // 3) ultimi pagamenti
+    var ult = data.pagamenti.filter(function (p) { return match(p.cliente + " " + p.telefono + " " + p.tipo); }).slice().sort(function (a, b) { return a.data < b.data ? 1 : a.data > b.data ? -1 : b.riga - a.riga; }).slice(0, 60);
+    h += '<article class="box"><div class="box-h"><h2>Ultimi pagamenti</h2></div>' +
+      (ult.length ? "<table><thead><tr><th>Data</th><th>Cliente</th><th>Tipo</th><th>Note</th><th style=\"text-align:right\">Importo</th></tr></thead><tbody>" + ult.map(function (p) {
+        return "<tr><td>" + esc(breve(p.data)) + '</td><td class="n">' + esc(p.cliente) + "</td><td>" + esc(p.tipo) + '</td><td class="g-note">' + esc(p.note) + '</td><td class="num"><b>' + euro(p.importo) + "</b></td></tr>";
+      }).join("") + "</tbody></table>" : '<div class="empty">Nessun pagamento registrato.</div>') + "</article>";
+    return h;
+  }
+
+  function render() {
+    var q = $("#q").value.trim().toLowerCase();
+    $("#pay-area").hidden = view !== "pagamenti";
+    $("#list").innerHTML = view === "pagamenti" ? renderPagamenti(q) : renderLezioni(q);
+  }
+
+  /* ---------- Modulo "Registra pagamento" ---------- */
+  var f = { cliente: $("#p-cliente"), tel: $("#p-tel"), tipo: $("#p-tipo"), importo: $("#p-importo"), data: $("#p-data"), lezioni: $("#p-lezioni"), scad: $("#p-scad"), note: $("#p-note") };
+  f.tipo.innerHTML = '<option value="">Scegli…</option>' + LISTINO.map(function (x) { return '<option>' + esc(x.nome) + "</option>"; }).join("");
+  function aggiornaDaTipo() {
+    var v = voce(f.tipo.value); if (!v) return;
+    f.importo.value = v.prezzo || "";
+    f.lezioni.value = v.lezioni;
+    var d = f.data.value ? pd(f.data.value) : new Date();
+    if (v.meseSolare) f.scad.value = iso(new Date(d.getFullYear(), d.getMonth() + 1, 0));
+    else if (v.mesi) { var s = new Date(d); s.setMonth(s.getMonth() + v.mesi); s.setDate(s.getDate() - 1); f.scad.value = iso(s); }
+    else f.scad.value = "";
+  }
+  f.tipo.addEventListener("change", aggiornaDaTipo);
+  f.data.addEventListener("change", function () { if (f.tipo.value) { var imp = f.importo.value; aggiornaDaTipo(); f.importo.value = imp; } });
+  var rubrica = {};
+  function fillClienti() {
+    rubrica = {};
+    data.prenotazioni.concat(data.pagamenti.map(function (p) { return { nome: p.cliente, telefono: p.telefono }; })).forEach(function (x) {
+      if (x.nome && !rubrica[x.nome]) rubrica[x.nome] = x.telefono || "";
+      if (x.nome && !rubrica[x.nome] && x.telefono) rubrica[x.nome] = x.telefono;
+    });
+    $("#clienti").innerHTML = Object.keys(rubrica).sort().map(function (n) { return '<option value="' + esc(n) + '">'; }).join("");
+  }
+  f.cliente.addEventListener("change", function () { if (rubrica[f.cliente.value] && !f.tel.value) f.tel.value = rubrica[f.cliente.value]; });
+  function resetForm() { $("#payform").reset(); f.data.value = data ? data.oggi : iso(new Date()); }
+
+  $("#payform").addEventListener("submit", function (e) {
+    e.preventDefault();
+    $("#p-err").textContent = ""; $("#p-ok").textContent = "";
+    var pag = { cliente: f.cliente.value.trim(), telefono: f.tel.value.trim(), tipo: f.tipo.value, importo: f.importo.value, data: f.data.value, lezioni: f.lezioni.value === "" ? 1 : f.lezioni.value, scadenza: f.scad.value, note: f.note.value.trim() };
+    if (!pag.cliente || !pag.tipo || pag.importo === "" || !pag.data) { $("#p-err").textContent = "Compila cliente, tipo, importo e data."; return; }
+    if (!pag.telefono && !confirm("Senza telefono il pagamento non si collega alle prenotazioni del cliente. Registrare comunque?")) return;
+    if (!confirm("Registrare " + euro(pag.importo) + " da " + pag.cliente + " (" + pag.tipo + ")?")) return;
+    var btn = $("#p-btn"); btn.disabled = true; btn.textContent = "Registrazione…";
+    call({ action: "registraPagamento", pagamento: pag }).then(function (j) {
+      btn.disabled = false; btn.textContent = "Registra pagamento";
+      if (!j.ok) { if (j.auth === false) return apply(j); $("#p-err").textContent = j.error || "Errore."; return; }
+      apply(j); resetForm();
+      $("#p-ok").textContent = "✓ Registrato: " + euro(pag.importo) + " da " + pag.cliente + ".";
+    }).catch(function () { btn.disabled = false; btn.textContent = "Registra pagamento"; $("#p-err").textContent = "Connessione non riuscita: il pagamento NON è stato registrato. Riprova."; });
+  });
+
+  /* ---------- Eventi ---------- */
   $("#login").addEventListener("submit", function (e) {
     e.preventDefault();
-    var v = $("#pwd").value;
-    if (!v) return;
+    var v = $("#pwd").value; if (!v) return;
     $("#login-btn").disabled = true; $("#login-btn").textContent = "Verifica…";
     setPwd(v);
     load().then(function () {
       $("#login-btn").disabled = false; $("#login-btn").textContent = "Entra"; $("#pwd").value = "";
-      clearInterval(timer); if (data && !$("#dash").hidden) timer = setInterval(function () { load(true); }, 60000);
+      if (data && !$("#dash").hidden) { resetForm(); startTimer(); }
     });
   });
   $("#refresh").addEventListener("click", function () { load(); });
@@ -222,12 +379,12 @@
     b.addEventListener("click", function () {
       view = b.getAttribute("data-view");
       Array.prototype.forEach.call(document.querySelectorAll("[data-view]"), function (x) { x.setAttribute("aria-pressed", x === b); });
-      render();
+      if (data) render();
     });
   });
 
   if (!C.apiUrl) { showLogin("Il sito non è ancora collegato al Google Sheet."); return; }
-  if (getPwd()) { load().then(function () { if (data) timer = setInterval(function () { load(true); }, 60000); }); }
+  if (getPwd()) load().then(function () { if (data) { resetForm(); startTimer(); } });
   else showLogin();
 })();
 </script>

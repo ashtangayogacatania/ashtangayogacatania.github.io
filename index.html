@@ -50,6 +50,7 @@
       <li><a href="ashtanga-yoga.html">Ashtanga Yoga</a></li>
       <li><a href="yoga-in-gravidanza.html">Yoga in gravidanza</a></li>
       <li><a href="rosaria-torrisi.html">Chi sono</a></li>
+      <li><a href="#prezzi">Prezzi</a></li>
       <li><a href="#dove">Dove</a></li>
       <li><a class="btn btn-primary btn-sm" href="#lezioni">Prenota una lezione</a></li>
     </ul>
@@ -141,8 +142,35 @@
     </div>
   </section>
 
+  <!-- PREZZI -->
+  <section class="section-sand" id="prezzi">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Quote</span>
+        <h2>Prezzi chiari, nessuna sorpresa</h2>
+        <p class="muted">Scegli la formula più adatta a quanto vuoi praticare. Più vieni, meno spendi a lezione.</p>
+      </div>
+      <div class="price-cards reveal" id="price-cards"></div>
+      <div class="price-extra reveal">
+        <ul class="price-list" id="price-list"></ul>
+        <div class="pay-box">
+          <h3>Come si paga</h3>
+          <ul>
+            <li><strong>In contanti, prima dell'inizio della lezione.</strong> Carnet e mensile si pagano alla prima lezione.</li>
+            <li>Prenota sempre il tuo posto online o su WhatsApp.</li>
+            <li>Non puoi venire? Avvisa <strong>almeno 12 ore prima</strong>: altrimenti la lezione viene scalata dal carnet.</li>
+            <li>Se una lezione viene annullata da noi, il tuo credito resta valido.</li>
+            <li>Carnet e mensili sono personali e non rimborsabili.</li>
+            <li id="quota-line">È richiesta l'iscrizione annuale all'associazione (tessera e assicurazione).</li>
+          </ul>
+          <p class="friend"><strong>Porta un'amica:</strong> se acquista un carnet, per te una lezione in omaggio.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ROSARIA -->
-  <section class="section-sand">
+  <section>
     <div class="wrap split">
       <figure class="reveal"><img src="img/rosaria.webp" width="718" height="1134" alt="Rosaria Torrisi corregge la postura di un'allieva" loading="lazy"></figure>
       <div class="reveal">
@@ -157,7 +185,7 @@
   </section>
 
   <!-- GALLERIA -->
-  <section>
+  <section class="section-sand">
     <div class="wrap">
       <div class="section-head reveal">
         <span class="eyebrow">Momenti di pratica</span>
@@ -176,7 +204,7 @@
   </section>
 
   <!-- DOVE -->
-  <section class="section-sand" id="dove">
+  <section id="dove">
     <div class="wrap">
       <div class="section-head reveal">
         <span class="eyebrow">Dove</span>
@@ -200,7 +228,7 @@
   </section>
 
   <!-- CTA -->
-  <section class="cta">
+  <section class="cta section-sand">
     <div class="wrap reveal">
       <span class="eyebrow">Inizia da qui</span>
       <h2>Il primo passo è srotolare il tappetino.</h2>
@@ -231,6 +259,7 @@
           <li><a href="yoga-in-gravidanza.html">Yoga in gravidanza</a></li>
           <li><a href="rosaria-torrisi.html">Rosaria Torrisi</a></li>
           <li><a href="./#lezioni">Calendario e prenotazioni</a></li>
+          <li><a href="./#prezzi">Prezzi</a></li>
         </ul>
       </div>
       <div>
@@ -260,6 +289,7 @@
       <h2 id="dlg-title">Lezione</h2>
       <p class="when" id="dlg-when"></p>
       <p class="min-note" id="dlg-min" hidden></p>
+      <p class="pay-note" id="dlg-pay" hidden></p>
       <form id="prenota-form" novalidate>
         <div class="field"><label for="f-nome">Nome e cognome *</label><input id="f-nome" name="nome" autocomplete="name" required maxlength="80"></div>
         <div class="field"><label for="f-tel">Telefono / WhatsApp *</label><input id="f-tel" name="telefono" type="tel" autocomplete="tel" inputmode="tel" required maxlength="30"></div>
