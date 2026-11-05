@@ -24,6 +24,16 @@ Le email di conferma partiranno da quell'indirizzo Gmail.
 3. *Esegui come*: **Me**. *Chi ha accesso*: **Chiunque**.
 4. **Distribuisci** e copia l'**URL dell'app web** (finisce con `/exec`).
 
+## 4b. Attiva il riepilogo automatico (minimo partecipanti)
+1. In Apps Script scegli la funzione **`installaRiepilogo`** e premi **Esegui** (Google chiede di autorizzare anche i "trigger").
+2. Nella scheda **Impostazioni** compaiono `MIN_PARTECIPANTI` (5) e gli orari del riepilogo:
+   - lezioni del mattino (prima delle 13:00): riepilogo alle **20:00 del giorno prima**
+   - tutte le altre: riepilogo alle **14:00 dello stesso giorno**
+3. A quell'ora arriva un'email a `EMAIL_NOTIFICHE` con i prenotati e l'indicazione "minimo raggiunto" oppure "NON raggiunto".
+   La decisione di annullare resta vostra: se annullate, aggiungete la data in *Lezioni annullate* e avvisate i prenotati.
+
+Se cambiate gli orari del riepilogo, aggiornate anche il testo mostrato sul sito (`js/main.js`, funzione `scadenzaAvviso`).
+
 ## 5. Collega il sito
 Apri `js/config.js` e incolla l'URL:
 ```js
