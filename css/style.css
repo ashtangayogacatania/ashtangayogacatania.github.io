@@ -300,3 +300,9 @@ section[id]{scroll-margin-top:56px}
 .where{grid-template-columns:repeat(2,1fr)}
 .where-days{font-size:.9rem;margin:-4px 0 6px}
 @media (max-width:760px){.where{grid-template-columns:1fr}}
+
+/* Avviso "sito in costruzione" (temporaneo) */
+.wip-banner{background:#FFF3D6;color:#5A3D00;border-bottom:1px solid #F0D58A;font-size:.9rem;line-height:1.45}
+.wip-banner p{margin:0 auto;max-width:1160px;padding:10px var(--gutter);text-align:center}
+.wip-banner a{color:#5A3D00;font-weight:600;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+@media (prefers-color-scheme:dark){.wip-banner{background:#FFF3D6;color:#5A3D00}}
