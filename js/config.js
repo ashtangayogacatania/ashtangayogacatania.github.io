@@ -42,7 +42,7 @@ window.YOGA_CONFIG = {
   // SEDI: il "nome" deve essere identico alla colonna Sede del Google Sheet.
   //   breve = etichetta del filtro nel calendario · zona = mostrata accanto al nome
   sedi: [
-    { nome: "Centro Yoga Visvamitra", breve: "La Scogliera", zona: "La Scogliera", indirizzo: "Residence La Scogliera, Via Battello 29, Catania" },
+    { nome: "Centro Yoga Visvamitra", breve: "Residence La Scogliera", zona: "Residence La Scogliera", indirizzo: "Residence La Scogliera, Via Battello 29, Catania" },
     { nome: "Istituto Leonardo da Vinci", breve: "Canalicchio", zona: "Canalicchio", indirizzo: "Via G.B. De La Salle 10/12, Catania (zona Canalicchio)" },
     { nome: "Sala di Ognina", breve: "Ognina", zona: "Ognina", indirizzo: "Via Acicastello 15, Catania (zona Ognina)" }
   ],
