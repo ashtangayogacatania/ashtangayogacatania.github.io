@@ -5,7 +5,7 @@ Obiettivo: ogni profilo porta a **un solo link**, la pagina di prenotazione `htt
 ## 1. Google Business Profile (il più importante, gratis)
 Chi cerca "yoga Catania" su Google o su Maps vede prima questa scheda e poi i siti.
 - https://business.google.com → *Aggiungi attività* → nome **Ashtanga Yoga Catania - Rosaria Torrisi**
-- Categoria: **Centro yoga**. Indirizzo principale: Centro Yoga Visvamitra, Residence La Scogliera, Via Battello 29, Catania (le altre sedi si citano nella descrizione: Istituto Leonardo da Vinci a Canalicchio e Via Acicastello 15 a Ognina)
+- Categoria: **Centro yoga**. Indirizzo principale: Centro Yoga Visvamitra, Residence La Scogliera, Via Battello 29, Catania (le altre sedi si citano nella descrizione: Istituto Leonardo da Vinci a Canalicchio e Studio Yoga Catania in Via Acicastello 15 a Ognina)
 - Telefono: +39 351 669 2727 · Sito: https://www.ashtangayogacatania.it
 - Orari: lun 11:00–21:00, mer 17:30–21:00, gio 11:00–12:30, ven 18:00–19:30, sab 8:30–12:00 (fasce che coprono tutte le lezioni)
 - Carica 5–10 foto e chiedi ai primi allievi soddisfatti di lasciare una recensione: è il fattore che conta di più.
@@ -35,14 +35,14 @@ Chi cerca "yoga Catania" su Google o su Maps vede prima questa scheda e poi i si
 | # | Foto/Video | Didascalia (bozza) |
 |---|---|---|
 | 1 | Ritratto di Rosaria | Mi chiamo Rosaria e pratico yoga dal 1990. Dal 2000 studio l'Ashtanga Vinyasa Yoga con il Maestro Lino Miele, allievo diretto di Sri K. Pattabhi Jois. Qui condividerò la pratica, i consigli e gli orari delle lezioni a Catania. 🙏 |
-| 2 | Lezione guidata (foto di gruppo) | Respiro, movimento, presenza. Lunedì e mercoledì al Residence La Scogliera, venerdì e sabato al Leonardo da Vinci, lunedì e giovedì mattina Hatha dolce a Ognina. Principianti benvenuti: link in bio per prenotare. |
+| 2 | Lezione guidata (foto di gruppo) | Respiro, movimento, presenza. Lunedì e mercoledì al Residence La Scogliera, venerdì e sabato al Leonardo da Vinci, lunedì e giovedì mattina Hatha dolce allo Studio Yoga Catania (Ognina). Principianti benvenuti: link in bio per prenotare. |
 | 3 | Aggiustamento | Cos'è il Mysore Style? Ognuno pratica la propria sequenza al proprio ritmo, e l'insegnante passa tra i tappetini con correzioni personali. È il metodo tradizionale insegnato a Mysore, in India. |
 | 4 | Foto della gravidanza | Lo yoga in gravidanza si può iniziare dalla 13ª settimana, anche senza esperienza: respirazione, rilassamento e posture per prepararsi al parto. Scrivici per il prossimo gruppo. 🤰 |
 | 5 | Carosello: gli 8 rami | Ashtanga significa "otto membra". Scorri per scoprire gli otto rami dello Yoga di Patanjali → |
 | 6 | Video di 15 secondi: Surya Namaskara A | Ogni pratica inizia così: il saluto al sole. |
 | 7 | Foto in India con Lino Miele | Kerala, 2009: un seminario con il Maestro Lino Miele. Da oltre vent'anni seguo i suoi insegnamenti per portarvi l'Ashtanga nella sua forma tradizionale. |
 | 8 | Grafica: "Consigli per una buona pratica" | Stomaco vuoto, abiti comodi, niente fretta. Tre consigli per la tua prima lezione. |
-| 9 | Foto della sala o dell'ingresso | Tre sale a Catania: Centro Yoga Visvamitra (Residence La Scogliera), Istituto Leonardo da Vinci (Canalicchio) e Ognina. Scegli la più comoda! 📍 |
+| 9 | Foto della sala o dell'ingresso | Tre sale a Catania: Centro Yoga Visvamitra (Residence La Scogliera), Istituto Leonardo da Vinci (Canalicchio) e Studio Yoga Catania (Ognina). Scegli la più comoda! 📍 |
 
 Hashtag (5–8 per post, a rotazione):
 `#ashtangayoga #ashtangacatania #yogacatania #catania #mysorestyle #yogaingravidanza #yogaprenatale #yogasicilia #ashtangavinyasa #yogaitalia`

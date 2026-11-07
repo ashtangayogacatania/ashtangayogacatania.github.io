@@ -44,19 +44,19 @@ window.YOGA_CONFIG = {
   sedi: [
     { nome: "Centro Yoga Visvamitra", breve: "Residence La Scogliera", zona: "Residence La Scogliera", indirizzo: "Residence La Scogliera, Via Battello 29, Catania" },
     { nome: "Istituto Leonardo da Vinci", breve: "Canalicchio", zona: "Canalicchio", indirizzo: "Via G.B. De La Salle 10/12, Catania (zona Canalicchio)" },
-    { nome: "Sala di Ognina", breve: "Ognina", zona: "Ognina", indirizzo: "Via Acicastello 15, Catania (zona Ognina)" }
+    { nome: "Studio Yoga Catania", breve: "Ognina", zona: "Ognina", indirizzo: "Studio Yoga Catania, Via Acicastello 15, Catania (zona Ognina)" }
   ],
 
   // Orario settimanale di riserva (usato solo se apiUrl è vuoto o non raggiungibile).
   // giorno: 1 = lunedì … 6 = sabato, 0 = domenica · minimo: 0 = si svolge comunque, vuoto = minimoPartecipanti
   // posti = posti prenotabili dal sito (lun 19:30 e mercoledì: gli altri li gestisce Rosaria con i suoi iscritti)
   orario: [
-    { giorno: 1, ora: "11:00", durata: 90, titolo: "Hatha Yoga dolce", livello: "Adatta a tutti", sede: "Sala di Ognina", posti: 8 },
+    { giorno: 1, ora: "11:00", durata: 90, titolo: "Hatha Yoga dolce", livello: "Adatta a tutti", sede: "Studio Yoga Catania", posti: 8 },
     { giorno: 1, ora: "16:00", durata: 90, titolo: "Yoga in gravidanza", livello: "Dalla 13ª settimana", sede: "Centro Yoga Visvamitra", posti: 6, minimo: 0 },
     { giorno: 1, ora: "19:30", durata: 90, titolo: "Ashtanga Yoga guidato & Pranayama", livello: "", sede: "Centro Yoga Visvamitra", posti: 3, minimo: 0 },
     { giorno: 3, ora: "17:30", durata: 90, titolo: "Hatha Yoga", livello: "Adatta a tutti", sede: "Centro Yoga Visvamitra", posti: 2, minimo: 0 },
     { giorno: 3, ora: "19:30", durata: 90, titolo: "Mysore Style e Ashtanga Yoga guidato", livello: "", sede: "Centro Yoga Visvamitra", posti: 2, minimo: 0 },
-    { giorno: 4, ora: "11:00", durata: 90, titolo: "Hatha Yoga dolce", livello: "Adatta a tutti", sede: "Sala di Ognina", posti: 8 },
+    { giorno: 4, ora: "11:00", durata: 90, titolo: "Hatha Yoga dolce", livello: "Adatta a tutti", sede: "Studio Yoga Catania", posti: 8 },
     { giorno: 5, ora: "18:00", durata: 90, titolo: "Ashtanga Yoga guidato", livello: "", sede: "Istituto Leonardo da Vinci", posti: 15 },
     { giorno: 6, ora: "08:30", durata: 90, titolo: "Mysore Style e Ashtanga Yoga guidato", livello: "", sede: "Istituto Leonardo da Vinci", posti: 15, minimo: 0 },
     { giorno: 6, ora: "10:30", durata: 90, titolo: "Ashtanga Yoga Base", livello: "Principianti", sede: "Istituto Leonardo da Vinci", posti: 15, minimo: 0 }

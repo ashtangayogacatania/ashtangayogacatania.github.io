@@ -71,15 +71,15 @@ var COLONNE_SEDI = ["Sede (come nella colonna Sede dell'orario)", "Indirizzo (us
 var SEDI_INIZIALI = [
   ["Centro Yoga Visvamitra", "Centro Yoga Visvamitra, Residence La Scogliera, Via Battello 29, Catania"],
   ["Istituto Leonardo da Vinci", "Istituto Leonardo da Vinci, Via G.B. De La Salle 10/12, Catania (zona Canalicchio)"],
-  ["Sala di Ognina", "Via Acicastello 15, Catania (zona Ognina)"]
+  ["Studio Yoga Catania", "Studio Yoga Catania, Via Acicastello 15, Catania (zona Ognina)"]
 ];
 var ORARIO_INIZIALE = [
-  ["Lunedì", "11:00", 90, "Hatha Yoga dolce", "Adatta a tutti", "Sala di Ognina", 8, "SI", ""],
+  ["Lunedì", "11:00", 90, "Hatha Yoga dolce", "Adatta a tutti", "Studio Yoga Catania", 8, "SI", ""],
   ["Lunedì", "16:00", 90, "Yoga in gravidanza", "Dalla 13ª settimana", "Centro Yoga Visvamitra", 6, "SI", 0],
   ["Lunedì", "19:30", 90, "Ashtanga Yoga guidato & Pranayama", "", "Centro Yoga Visvamitra", 6, "SI", 0],
   ["Mercoledì", "17:30", 90, "Hatha Yoga", "Adatta a tutti", "Centro Yoga Visvamitra", 6, "SI", 0],
   ["Mercoledì", "19:30", 90, "Mysore Style e Ashtanga Yoga guidato", "", "Centro Yoga Visvamitra", 6, "SI", 0],
-  ["Giovedì", "11:00", 90, "Hatha Yoga dolce", "Adatta a tutti", "Sala di Ognina", 8, "SI", ""],
+  ["Giovedì", "11:00", 90, "Hatha Yoga dolce", "Adatta a tutti", "Studio Yoga Catania", 8, "SI", ""],
   ["Venerdì", "18:00", 90, "Ashtanga Yoga guidato", "", "Istituto Leonardo da Vinci", 15, "SI", ""],
   ["Sabato", "08:30", 90, "Mysore Style e Ashtanga Yoga guidato", "", "Istituto Leonardo da Vinci", 15, "SI", 0],
   ["Sabato", "10:30", 90, "Ashtanga Yoga Base", "Principianti", "Istituto Leonardo da Vinci", 15, "SI", 0]
