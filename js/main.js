@@ -86,13 +86,50 @@
         if (o.giorno !== d.getDay()) return;
         var p = o.ora.split(":"), when = new Date(d); when.setHours(+p[0], +p[1], 0, 0);
         if (when < now) return;
-        out.push({ id: isoDate(d) + " " + o.ora, data: isoDate(d), ora: o.ora, durata: o.durata, titolo: o.titolo, livello: o.livello, sede: o.sede, posti: o.posti, prenotati: null });
+        out.push({ id: isoDate(d) + " " + o.ora, data: isoDate(d), ora: o.ora, durata: o.durata, titolo: o.titolo, livello: o.livello, sede: o.sede, posti: o.posti, minimo: o.minimo, prenotati: null });
       });
     }
     return out;
   }
 
+  // Minimo della singola lezione: 0 = si svolge comunque; se manca vale il minimo generale
+  function minOf(l) { return l && l.minimo != null && l.minimo !== "" ? +l.minimo || 0 : +C.minimoPartecipanti || 0; }
+  // Tipo di lezione, ricavato dal titolo (per i filtri)
+  var TIPI = [
+    { id: "gravidanza", nome: "Gravidanza", re: /gravidanza/i },
+    { id: "hatha", nome: "Hatha Yoga", re: /hatha/i },
+    { id: "ashtanga", nome: "Ashtanga", re: /ashtanga|mysore/i }
+  ];
+  function tipoOf(l) { for (var i = 0; i < TIPI.length; i++) if (TIPI[i].re.test(l.titolo)) return TIPI[i].id; return "altro"; }
+  function sedeInfo(nome) {
+    return (C.sedi || []).filter(function (x) { return x.nome.toLowerCase() === String(nome || "").toLowerCase(); })[0] || null;
+  }
+  function sedeLabel(nome) { var x = sedeInfo(nome); return x ? x.nome + (x.zona && x.nome.indexOf(x.zona) < 0 ? " · " + x.zona : "") : nome || ""; }
+
+  // Filtri: ?corso=gravidanza nell'indirizzo preseleziona il tipo (usato dalle pagine dei corsi)
+  var filtro = { tipo: "", sede: "" };
+  try { var qp = new URLSearchParams(location.search).get("corso"); if (qp) filtro.tipo = qp; } catch (e) {}
+  var fbar = document.createElement("div");
+  fbar.className = "filters"; fbar.setAttribute("role", "toolbar"); fbar.setAttribute("aria-label", "Filtra le lezioni");
+  box.parentNode.insertBefore(fbar, box);
+  function renderFiltri() {
+    var tipi = TIPI.filter(function (t) { return lezioni.some(function (l) { return tipoOf(l) === t.id; }); });
+    var sedi = [];
+    lezioni.forEach(function (l) { if (l.sede && sedi.indexOf(l.sede) < 0) sedi.push(l.sede); });
+    var ordine = (C.sedi || []).map(function (x) { return x.nome; });
+    sedi.sort(function (a, b) { var i = ordine.indexOf(a), j = ordine.indexOf(b); return (i < 0 ? 99 : i) - (j < 0 ? 99 : j); });
+    if (tipi.length < 2 && sedi.length < 2) { fbar.innerHTML = ""; return; }
+    var chip = function (k, v, label) { var on = filtro[k] === v; return '<button type="button" class="chip' + (on ? " on" : "") + '" aria-pressed="' + on + '" data-k="' + k + '" data-v="' + esc(v) + '">' + esc(label) + "</button>"; };
+    fbar.innerHTML =
+      (tipi.length > 1 ? '<div class="chips">' + chip("tipo", "", "Tutte") + tipi.map(function (t) { return chip("tipo", t.id, t.nome); }).join("") + "</div>" : "") +
+      (sedi.length > 1 ? '<div class="chips">' + chip("sede", "", "Tutte le sedi") + sedi.map(function (x) { var i = sedeInfo(x); return chip("sede", x, i && i.breve ? i.breve : x); }).join("") + "</div>" : "");
+    $$(".chip", fbar).forEach(function (b) {
+      b.addEventListener("click", function () { filtro[b.getAttribute("data-k")] = b.getAttribute("data-v"); render(); });
+    });
+  }
+
   function render() {
+    renderFiltri();
     if (!lezioni.length) {
       box.innerHTML = '<p class="loading">Al momento non ci sono lezioni in calendario. Scrivici su WhatsApp per informazioni o per una lezione individuale.</p>';
       return;
@@ -102,6 +139,8 @@
     var domani = isoDate(d1);
     var lunediOggi = lunedi(oggi);
     lezioni.forEach(function (l, i) {
+      if (filtro.tipo && tipoOf(l) !== filtro.tipo) return;
+      if (filtro.sede && l.sede !== filtro.sede) return;
       // separatore per settimana: "Questa settimana", "Settimana prossima", "Dal 23 novembre"
       var w = lunedi(l.data);
       if (w !== lastWeek) {
@@ -117,13 +156,14 @@
       html += '<div class="session' + (full ? " is-full" : "") + '">' +
         '<div class="date-tile' + (rel ? " soon" : "") + '" aria-hidden="true"><span>' + GIORNI[dt.getDay()].slice(0, 3) + "</span><b>" + dt.getDate() + "</b><span>" + MESI[dt.getMonth()].slice(0, 3) + "</span></div>" +
         '<div class="s-body"><div class="s-when"><time datetime="' + esc(l.data + "T" + l.ora) + '"><span class="sr">' + esc(longDate(l.data)) + ", </span>" + esc(l.ora) + "–" + esc(addMin(l.ora, l.durata)) + "</time>" + (rel ? '<span class="rel">' + rel + "</span>" : "") + "</div>" +
-        "<h3>" + esc(l.titolo) + seats + '</h3><div class="meta">' + esc([l.livello, l.sede].filter(Boolean).join(" · ")) + "</div></div>" +
+        "<h3>" + esc(l.titolo) + seats + '</h3><div class="meta">' + esc([sedeLabel(l.sede), l.livello].filter(Boolean).join(" · ")) + "</div>" +
+        (minOf(l) ? '<div class="new-course">Nuovo corso · parte con ' + minOf(l) + " iscritti</div>" : "") + "</div>" +
         (full
           ? '<a class="btn btn-ghost btn-sm" data-wa-full="' + i + '">Lista d\'attesa</a>'
           : '<button class="btn btn-primary btn-sm" type="button" data-book="' + i + '">Prenota</button>') +
         "</div>";
     });
-    box.innerHTML = html;
+    box.innerHTML = html || '<p class="loading">Nessuna lezione con questi filtri nelle prossime settimane.</p>';
     $$("[data-book]", box).forEach(function (b) { b.addEventListener("click", function () { openBooking(lezioni[+b.getAttribute("data-book")]); }); });
     $$("[data-wa-full]", box).forEach(function (a) {
       var l = lezioni[+a.getAttribute("data-wa-full")];
@@ -160,7 +200,7 @@
     return +l.ora.split(":")[0] < 13 ? "entro le 20:00 del giorno prima" : "entro le 14:00 del giorno stesso";
   }
   function minNote(l) {
-    var min = +C.minimoPartecipanti || 0;
+    var min = minOf(l);
     if (!min) return "";
     return "La lezione si svolge con almeno " + min + " partecipanti. Se non si raggiunge il numero ti avvisiamo " + scadenzaAvviso(l) + ", così potrai spostarti su un'altra lezione.";
   }
@@ -171,7 +211,7 @@
     $("#dlg-min").textContent = mn; $("#dlg-min").hidden = !mn;
     if (listino.length) { $("#dlg-pay").innerHTML = esc(payNote()) + ' <a href="#prezzi">Tutti i prezzi</a>'; $("#dlg-pay").hidden = false; }
     $("#dlg-title").textContent = l.titolo;
-    $("#dlg-when").textContent = longDate(l.data) + ", ore " + l.ora + " – " + addMin(l.ora, l.durata) + " · " + (l.sede || "");
+    $("#dlg-when").textContent = longDate(l.data) + ", ore " + l.ora + " – " + addMin(l.ora, l.durata) + " · " + (sedeInfo(l.sede) ? sedeInfo(l.sede).indirizzo : l.sede || "");
     $("#dlg-form-wrap").hidden = false; $("#dlg-success").hidden = true;
     $("#form-msg").textContent = ""; $("#form-msg").className = "form-msg";
     $("#dlg-submit").textContent = online ? "Conferma prenotazione" : "Invia richiesta su WhatsApp";
@@ -212,7 +252,7 @@
         if (!j.ok) { msg.textContent = j.error || "Non è stato possibile completare la prenotazione."; msg.className = "form-msg err"; if (j.lezioni) { lezioni = j.lezioni; render(); } return; }
         $("#dlg-form-wrap").hidden = true; $("#dlg-success").hidden = false;
         $("#dlg-success-text").textContent = "Ti aspettiamo " + longDate(current.data).toLowerCase() + " alle " + current.ora + "." + (data.email ? " Ti abbiamo inviato una email di conferma." : "");
-        $("#dlg-success-min").textContent = (+C.minimoPartecipanti) ? "Ricorda: se non si raggiungono " + C.minimoPartecipanti + " partecipanti ti avvisiamo " + scadenzaAvviso(current) + "." : "";
+        $("#dlg-success-min").textContent = minOf(current) ? "Ricorda: se non si raggiungono " + minOf(current) + " partecipanti ti avvisiamo " + scadenzaAvviso(current) + "." : "";
         form.reset(); load();
       })
       .catch(function () {

@@ -49,7 +49,7 @@ Il dominio **ashtangayogacatania.it** esiste già ed è quello del vecchio sito.
 ## Da verificare prima della pubblicazione
 - [ ] **Anni di esperienza**: il vecchio sito dice che pratica dal 1990, si diploma insegnante nel 2004 e insegna Ashtanga dal 2000. Il nuovo sito dice "dal 1990" e "oltre trent'anni". Se insegna davvero da 40 anni, correggi in `index.html` e `_pagine/rosaria-torrisi.html`.
 - [ ] **Foto**: le foto più belle portano il marchio della fotografa **Mara Trovato**. Il marchio è stato lasciato e lei è citata nel piè di pagina. Conviene comunque chiederle il permesso di usarle sul nuovo sito.
-- [ ] **Tipo e durata delle lezioni**: ho ipotizzato Ashtanga guidata da 90 minuti, con Mysore Style il sabato. Si cambiano dal Google Sheet (o da `js/config.js` finché il foglio non è collegato).
+- [x] **Tipo e durata delle lezioni**: orario di novembre 2026, tutte da 90 minuti, in 3 sedi. Si cambiano dal Google Sheet (scheda *Orario settimanale*).
 - [ ] **Privacy**: in `_pagine/privacy.html` inserisci il nome del titolare del trattamento, al posto di `[NOME E COGNOME DEL TITOLARE]`, poi rigenera le pagine.
 - [ ] **Lezione di prova**: il vecchio sito diceva "la prima lezione è sempre gratuita". Se vale ancora, è un ottimo argomento da aggiungere in home.
 - [ ] **Prezzi**: non li ho inseriti. Se volete mostrarli, si aggiunge una sezione.

@@ -58,6 +58,17 @@ Il collegamento tra prenotazioni e pagamenti avviene tramite il **numero di tele
 Errori di inserimento: si correggono o si cancellano direttamente nella scheda **Pagamenti** del foglio. Dalla pagina si può solo aggiungere.
 I prezzi del listino si cambiano in `js/config.js` (voce `listino`) e si aggiornano sia sul sito sia nel modulo.
 
+## 4e. Più sedi e minimo per singola lezione (novembre 2026)
+Una volta sola, dopo aver aggiornato lo script: in Apps Script scegli **`aggiornaOrario2026`** e premi **Esegui**.
+Sostituisce l'orario settimanale con quello nuovo (9 lezioni in 3 sedi), aggiunge la colonna **Minimo** e crea la scheda **Sedi**. Le prenotazioni non vengono toccate.
+
+- **Colonna Minimo** (Orario settimanale e Lezioni extra):
+  - `0` = la lezione si fa comunque (corsi già avviati): nessun avviso sul sito e nessun riepilogo;
+  - vuota = vale `MIN_PARTECIPANTI` delle Impostazioni (5): sul sito compare "Nuovo corso · parte con 5 iscritti" e arriva il riepilogo;
+  - un numero (es. `3`) = minimo solo per quella lezione.
+- **Scheda Sedi**: il nome deve essere identico a quello scritto nella colonna *Sede*; l'indirizzo finisce nell'email di conferma.
+  Se aggiungete una sede nuova, aggiungetela anche in `js/config.js` (voce `sedi`) per il filtro e l'etichetta sul sito.
+
 ## 5. Collega il sito
 Apri `js/config.js` e incolla l'URL:
 ```js

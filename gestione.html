@@ -212,10 +212,10 @@
   /* ---------- Viste ---------- */
   function gruppi() {
     var map = {}, oggi = data.oggi;
-    data.lezioni.forEach(function (l) { map[l.id] = { data: l.data, ora: l.ora, titolo: l.titolo, posti: l.posti, persone: [] }; });
+    data.lezioni.forEach(function (l) { map[l.id] = { data: l.data, ora: l.ora, titolo: l.titolo, sede: l.sede || "", posti: l.posti, minimo: l.minimo === undefined ? data.minimo : +l.minimo || 0, persone: [] }; });
     data.prenotazioni.forEach(function (p, i) {
       var id = p.data + " " + p.ora;
-      if (!map[id]) map[id] = { data: p.data, ora: p.ora, titolo: p.titolo, posti: 0, persone: [] };
+      if (!map[id]) map[id] = { data: p.data, ora: p.ora, titolo: p.titolo, sede: "", posti: 0, minimo: 0, persone: [] };
       map[id].persone.push({ p: p, i: i });
     });
     var sette = iso(new Date(pd(oggi).getTime() - 7 * 864e5));
@@ -231,12 +231,12 @@
 
   function statsLezioni(all) {
     var fut = all.filter(function (g) { return g.futura && !g.annullata; });
-    var sotto = fut.filter(function (g) { return data.minimo && g.attivi < data.minimo; }).length;
+    var sotto = fut.filter(function (g) { return g.minimo && g.attivi < g.minimo; }).length;
     var tot = fut.reduce(function (s, g) { return s + g.attivi; }, 0);
     $("#stats").innerHTML =
       '<div class="stat"><b>' + fut.length + '</b><span>lezioni in programma</span></div>' +
       '<div class="stat"><b>' + tot + '</b><span>prenotazioni attive</span></div>' +
-      '<div class="stat"><b>' + sotto + '</b><span>sotto il minimo di ' + data.minimo + '</span></div>';
+      '<div class="stat"><b>' + sotto + '</b><span>nuovi corsi sotto il minimo</span></div>';
   }
 
   function renderLezioni(q) {
@@ -251,9 +251,9 @@
     if (!list.length) return '<div class="box"><div class="empty">' + (q ? "Nessun risultato." : view === "prossime" ? "Nessuna lezione in programma." : "Nessuna prenotazione negli ultimi 7 giorni.") + "</div></div>";
     return list.map(function (g) {
       var pill = g.annullata ? '<span class="pill off">Lezione annullata</span>'
-        : !data.minimo ? '<span class="pill ok">' + g.attivi + " iscritti</span>"
-        : g.attivi >= data.minimo ? '<span class="pill ok">✓ ' + g.attivi + " iscritti · minimo raggiunto</span>"
-        : '<span class="pill warn">' + g.attivi + " su " + data.minimo + " · ne mancano " + (data.minimo - g.attivi) + "</span>";
+        : !g.minimo ? '<span class="pill ok">' + g.attivi + " iscritti</span>"
+        : g.attivi >= g.minimo ? '<span class="pill ok">✓ ' + g.attivi + " iscritti · minimo raggiunto</span>"
+        : '<span class="pill warn">' + g.attivi + " su " + g.minimo + " · ne mancano " + (g.minimo - g.attivi) + "</span>";
       var righe = g.persone.length ? '<table><thead><tr><th>Nome</th><th>Contatti</th><th>Note</th><th>Stato</th><th>Pagamento</th></tr></thead><tbody>' +
         g.persone.map(function (x) {
           var p = x.p, w = waNum(p.telefono), c = cov.perBooking[x.i];
@@ -267,7 +267,7 @@
         }).join("") + "</tbody></table>"
         : '<div class="empty">Ancora nessun prenotato.</div>';
       return '<article class="box"><div class="box-h"><h2>' + esc(giorno(g.data)) + " · " + esc(g.ora) +
-        "<small>" + esc(g.titolo) + (g.posti ? " · " + g.attivi + "/" + g.posti + " posti" : "") + "</small></h2>" + pill + "</div>" + righe + "</article>";
+        "<small>" + esc(g.titolo) + (g.sede ? " · " + esc(g.sede) : "") + (g.posti ? " · " + g.attivi + "/" + g.posti + " posti" : "") + "</small></h2>" + pill + "</div>" + righe + "</article>";
     }).join("");
   }
 

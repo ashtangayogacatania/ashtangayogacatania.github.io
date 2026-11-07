@@ -287,3 +287,16 @@ h1,h2,h3,.session time,.hero-badge b,.eight li::before{font-variant-numeric:lini
 
 /* Ancore: lo spazio dell'header fisso non copre l'inizio della sezione */
 section[id]{scroll-margin-top:56px}
+
+/* Più sedi: filtri del calendario, badge nuovo corso, tre corsi e tre sedi */
+.filters{display:flex;flex-direction:column;gap:8px;margin:0 0 18px}
+.filters:empty{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 .84rem/1 var(--sans);padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:background .15s,border-color .15s}
+.chip:hover{border-color:var(--accent)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.new-course{display:inline-block;margin-top:6px;font:600 .74rem/1.3 var(--sans);letter-spacing:.02em;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:999px}
+@media (min-width:1000px){.cards{grid-template-columns:repeat(3,1fr)}}
+.where{grid-template-columns:repeat(2,1fr)}
+.where-days{font-size:.9rem;margin:-4px 0 6px}
+@media (max-width:760px){.where{grid-template-columns:1fr}}
